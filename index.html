@@ -25,14 +25,35 @@
     }
 
     body {
-      display: flex;
-      min-height: 100vh;
       background-color: var(--main-bg);
       color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
     }
 
+    /* 📱 Мобильное меню — кнопка */
+    .mobile-menu-btn {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* 📚 Боковая панель */
     .sidebar {
-      width: 250px;
+      width: 280px;
       background-color: var(--sidebar-bg);
       color: var(--sidebar-text);
       padding: 20px 0;
@@ -44,6 +65,8 @@
       top: 0;
       left: 0;
       overflow-y: auto;
+      transition: transform 0.3s ease;
+      z-index: 90;
     }
 
     .sidebar-header {
@@ -56,13 +79,11 @@
     }
 
     .nav-item {
-      padding: 12px 20px;
+      padding: 16px 20px;
       cursor: pointer;
       transition: all 0.3s ease;
       border-left: 4px solid transparent;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 18px;
     }
 
     .nav-item:hover {
@@ -76,10 +97,12 @@
       color: #FFFFFF;
     }
 
+    /* 📖 Основной контент */
     .main-content {
       flex: 1;
-      margin-left: 250px;
+      margin-left: 280px;
       padding: 30px;
+      transition: margin-left 0.3s ease;
     }
 
     .tab-content {
@@ -104,55 +127,134 @@
 
     h2 {
       color: var(--primary);
-      margin-bottom: 16px;
+      margin: 24px 0 16px;
+      font-size: 1.8rem;
+    }
+
+    h3 {
+      margin: 20px 0 12px;
     }
 
     p, ul, ol {
       margin-bottom: 16px;
+      font-size: 1rem;
+      line-height: 1.6;
     }
 
     code {
       background: #F1F5F9;
-      padding: 2px 6px;
+      padding: 4px 8px;
       border-radius: 4px;
       font-family: monospace;
       color: var(--text-color);
+      font-size: 0.95rem;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    /* 🎛️ Стили для интерактивных блоков */
+    .interactive-block {
+      background: #f0f7ff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #165DFF;
+      margin: 30px 0;
+      box-shadow: 0 4px 12px rgba(22, 93, 255, 0.1);
+    }
+
+    .interactive-block h3 {
+      color: #165DFF;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+
+    input, select, button {
+      font-size: 1rem;
+      padding: 12px;
+      border-radius: 8px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    button {
+      width: auto;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
     }
 
     @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: block;
+      }
+
       .sidebar {
-        width: 70px;
-        padding: 20px 5px;
+        transform: translateX(-100%);
+        width: 85vw;
+        min-width: 280px;
+        max-width: 320px;
       }
-      .sidebar-header {
-        font-size: 1.2rem;
-        text-align: center;
-        padding: 0 5px 15px;
+
+      .sidebar.open {
+        transform: translateX(0);
       }
-      .nav-item span {
-        display: none;
-      }
-      .nav-item {
-        justify-content: center;
-        padding: 15px 5px;
-      }
+
       .main-content {
-        margin-left: 70px;
+        margin-left: 0;
+        padding: 20px 16px;
+      }
+
+      .nav-item {
+        padding: 18px 20px;
+        font-size: 1.1rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin: 20px 0 12px;
+      }
+
+      p, ul, ol {
+        font-size: 1rem;
+      }
+
+      input, select {
+        padding: 14px;
+        font-size: 1.05rem;
+      }
+
+      button {
+        padding: 14px 20px;
+        font-size: 1.05rem;
+      }
+
+      .interactive-block {
+        padding: 16px;
+        margin: 20px 0;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- 📚 БОКОВАЯ ПАНЕЛЬ -->
-  <div class="sidebar">
-    <div class="sidebar-header">Мехатроник момент</div>
+  <!-- 📱 Кнопка меню для мобильных -->
+  <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
 
-    <!-- 💡 КАК ДОБАВИТЬ ВКЛАДКУ:
-         1. Скопируй блок <div class="nav-item">...</div>
-         2. Замени data-tab="tabX" на уникальный ID (например tab6)
-         3. Замени текст внутри <span>...</span>
-    -->
+  <!-- 📚 БОКОВАЯ ПАНЕЛЬ -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">База</div>
     <div class="nav-item active" data-tab="tab1">
       <span> Резерв </span>
     </div>
@@ -168,10 +270,6 @@
     <div class="nav-item" data-tab="tab5">
       <span> MNC501 </span>
     </div>
-
-
-   <!-- <div class="nav-item" data-tab="tab6">    -->
-
   </div>
 
   <!-- 📖 ОСНОВНОЙ КОНТЕНТ -->
@@ -180,208 +278,105 @@
     <!-- ВКЛАДКА 1 -->
     <div id="tab1" class="tab-content active">
       <h2>Резерв</h2>
+      <p>Эта вкладка зарезервирована для будущего использования.</p>
     </div>
 
     <!-- ВКЛАДКА 2 -->
     <div id="tab2" class="tab-content">
       <h2>Карта памяти для графиков</h2>
-			<div style="background: #f0f7ff; padding: 20px; border-radius: 12px; border: 2px solid #165DFF; margin: 30px 0; box-shadow: 0 4px 12px rgba(22, 93, 255, 0.1);">
-			  <h3 style="color: #165DFF; margin-bottom: 16px;">🔍 Поиск параметра мотора</h3>
 
-			  <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; align-items: end;">
-				<div style="flex: 1; min-width: 200px;">
-				  <label for="motor-select" style="display: block; margin-bottom: 8px; font-weight: 500;">Номер мотора:</label>
-				  <select id="motor-select" style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 8px; background: white; font-size: 16px;">
-					<option value="">— Выберите —</option>
-					<!-- Моторы 1-32 -->
-					<script>
-					  for (let i = 1; i <= 32; i++) {
-						document.write(`<option value="${i}">Мотор ${i}</option>`);
-					  }
-					</script>
-				  </select>
-				</div>
+      <div class="interactive-block">
+        <h3>🔍 Поиск параметра мотора</h3>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+          <div style="flex: 1; min-width: 200px;">
+            <label for="motor-select">Номер мотора:</label>
+            <select id="motor-select">
+              <option value="">— Выберите —</option>
+              <script>
+                for (let i = 1; i <= 32; i++) {
+                  document.write(`<option value="${i}">Мотор ${i}</option>`);
+                }
+              </script>
+            </select>
+          </div>
+          <div style="flex: 1; min-width: 200px;">
+            <label for="param-select">Параметр:</label>
+            <select id="param-select">
+              <option value="">— Выберите —</option>
+              <option value="position_set">Заданное положение</option>
+              <option value="position_actual">Фактическое положение</option>
+              <option value="position_error">Рассогласование по положению</option>
+              <option value="current_id">Ток намагничивания, Id</option>
+              <option value="current_iq">Ток нагрузки, Iq</option>
+              <option value="speed_set">Заданная скорость</option>
+              <option value="speed_actual">Фактическая скорость</option>
+            </select>
+          </div>
+        </div>
+        <div id="result-box" style="padding: 16px; background: #E6F0FF; border-radius: 8px; border-left: 4px solid #165DFF; display: none; font-size: 1rem; font-weight: 600;">
+          <span>Адрес: </span><span id="result-value"></span>
+        </div>
+      </div>
 
-				<div style="flex: 1; min-width: 200px;">
-				  <label for="param-select" style="display: block; margin-bottom: 8px; font-weight: 500;">Параметр:</label>
-				  <select id="param-select" style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 8px; background: white; font-size: 16px;">
-					<option value="">— Выберите —</option>
-					<option value="position_set">Заданное положение</option>
-					<option value="position_actual">Фактическое положение</option>
-					<option value="position_error">Рассогласование по положению</option>
-					<option value="current_id">Ток намагничивания, Id</option>
-					<option value="current_iq">Ток нагрузки, Iq</option>
-					<option value="speed_set">Заданная скорость</option>
-					<option value="speed_actual">Фактическая скорость</option>
-				  </select>
-				</div>
-			  </div>
+      <img src="karta_pam.png" alt="Карта памяти">
 
-			  <div id="result-box" style="padding: 16px; background: #E6F0FF; border-radius: 8px; border-left: 4px solid #165DFF; display: none; font-size: 18px; font-weight: 600; color: #1E293B;">
-				<span>Адрес: </span><span id="result-value"></span>
-			  </div>
-			</div>
-
-			<script>
-			  // 🗺️ Карта памяти — данные из PDF
-			  const motorMap = {
-				1: { position_set: "D:$88", position_actual: "D:$8B", position_error: "D:$91", current_id: "X:$B9", current_iq: "Y:$B9", speed_set: "D:$C6", speed_actual: "D:$EF" },
-				2: { position_set: "D:$108", position_actual: "D:$10B", position_error: "D:$111", current_id: "X:$139", current_iq: "Y:$139", speed_set: "D:$146", speed_actual: "D:$16F" },
-				3: { position_set: "D:$188", position_actual: "D:$18B", position_error: "D:$191", current_id: "X:$1B9", current_iq: "Y:$1B9", speed_set: "D:$1C6", speed_actual: "D:$1EF" },
-				4: { position_set: "D:$208", position_actual: "D:$20B", position_error: "D:$211", current_id: "X:$239", current_iq: "Y:$239", speed_set: "D:$246", speed_actual: "D:$26F" },
-				5: { position_set: "D:$288", position_actual: "D:$28B", position_error: "D:$291", current_id: "X:$2B9", current_iq: "Y:$2B9", speed_set: "D:$2C6", speed_actual: "D:$2EF" },
-				6: { position_set: "D:$308", position_actual: "D:$30B", position_error: "D:$311", current_id: "X:$339", current_iq: "Y:$339", speed_set: "D:$346", speed_actual: "D:$36F" },
-				7: { position_set: "D:$388", position_actual: "D:$38B", position_error: "D:$391", current_id: "X:$3B9", current_iq: "Y:$3B9", speed_set: "D:$3C6", speed_actual: "D:$3EF" },
-				8: { position_set: "D:$408", position_actual: "D:$40B", position_error: "D:$411", current_id: "X:$439", current_iq: "Y:$439", speed_set: "D:$446", speed_actual: "D:$46F" },
-				9: { position_set: "D:$488", position_actual: "D:$48B", position_error: "D:$491", current_id: "X:$4B9", current_iq: "Y:$4B9", speed_set: "D:$4C6", speed_actual: "D:$4EF" },
-				10: { position_set: "D:$508", position_actual: "D:$50B", position_error: "D:$511", current_id: "X:$539", current_iq: "Y:$539", speed_set: "D:$546", speed_actual: "D:$56F" },
-				11: { position_set: "D:$588", position_actual: "D:$58B", position_error: "D:$591", current_id: "X:$5B9", current_iq: "Y:$5B9", speed_set: "D:$5C6", speed_actual: "D:$5EF" },
-				12: { position_set: "D:$608", position_actual: "D:$60B", position_error: "D:$611", current_id: "X:$639", current_iq: "Y:$639", speed_set: "D:$646", speed_actual: "D:$66F" },
-				13: { position_set: "D:$688", position_actual: "D:$68B", position_error: "D:$691", current_id: "X:$6B9", current_iq: "Y:$6B9", speed_set: "D:$6C6", speed_actual: "D:$6EF" },
-				14: { position_set: "D:$708", position_actual: "D:$70B", position_error: "D:$711", current_id: "X:$739", current_iq: "Y:$739", speed_set: "D:$746", speed_actual: "D:$76F" },
-				15: { position_set: "D:$788", position_actual: "D:$78B", position_error: "D:$791", current_id: "X:$7B9", current_iq: "Y:$7B9", speed_set: "D:$7C6", speed_actual: "D:$7EF" },
-				16: { position_set: "D:$808", position_actual: "D:$80B", position_error: "D:$811", current_id: "X:$839", current_iq: "Y:$839", speed_set: "D:$846", speed_actual: "D:$86F" },
-				17: { position_set: "D:$888", position_actual: "D:$88B", position_error: "D:$891", current_id: "X:$8B9", current_iq: "Y:$8B9", speed_set: "D:$8C6", speed_actual: "D:$8EF" },
-				18: { position_set: "D:$908", position_actual: "D:$90B", position_error: "D:$911", current_id: "X:$939", current_iq: "Y:$939", speed_set: "D:$946", speed_actual: "D:$96F" },
-				19: { position_set: "D:$988", position_actual: "D:$98B", position_error: "D:$991", current_id: "X:$9B9", current_iq: "Y:$9B9", speed_set: "D:$9C6", speed_actual: "D:$9EF" },
-				20: { position_set: "D:$A08", position_actual: "D:$A0B", position_error: "D:$A11", current_id: "X:$A39", current_iq: "Y:$A39", speed_set: "D:$A46", speed_actual: "D:$A6F" },
-				21: { position_set: "D:$A88", position_actual: "D:$A8B", position_error: "D:$A91", current_id: "X:$AB9", current_iq: "Y:$AB9", speed_set: "D:$AC6", speed_actual: "D:$AEF" },
-				22: { position_set: "D:$B08", position_actual: "D:$B0B", position_error: "D:$B11", current_id: "X:$B39", current_iq: "Y:$B39", speed_set: "D:$B46", speed_actual: "D:$B6F" },
-				23: { position_set: "D:$B88", position_actual: "D:$B8B", position_error: "D:$B91", current_id: "X:$BB9", current_iq: "Y:$BB9", speed_set: "D:$BC6", speed_actual: "D:$BEF" },
-				24: { position_set: "D:$C08", position_actual: "D:$C0B", position_error: "D:$C11", current_id: "X:$C39", current_iq: "Y:$C39", speed_set: "D:$C46", speed_actual: "D:$C6F" },
-				25: { position_set: "D:$C88", position_actual: "D:$C8B", position_error: "D:$C91", current_id: "X:$CB9", current_iq: "Y:$CB9", speed_set: "D:$CC6", speed_actual: "D:$CEF" },
-				26: { position_set: "D:$D08", position_actual: "D:$D0B", position_error: "D:$D11", current_id: "X:$D39", current_iq: "Y:$D39", speed_set: "D:$D46", speed_actual: "D:$D6F" },
-				27: { position_set: "D:$D88", position_actual: "D:$D8B", position_error: "D:$D91", current_id: "X:$DB9", current_iq: "Y:$DB9", speed_set: "D:$DC6", speed_actual: "D:$DEF" },
-				28: { position_set: "D:$E08", position_actual: "D:$E0B", position_error: "D:$E11", current_id: "X:$E39", current_iq: "Y:$E39", speed_set: "D:$E46", speed_actual: "D:$E6F" },
-				29: { position_set: "D:$E88", position_actual: "D:$E8B", position_error: "D:$E91", current_id: "X:$EB9", current_iq: "Y:$EB9", speed_set: "D:$EC6", speed_actual: "D:$EEF" },
-				30: { position_set: "D:$F08", position_actual: "D:$F0B", position_error: "D:$F11", current_id: "X:$F39", current_iq: "Y:$F39", speed_set: "D:$F46", speed_actual: "D:$F6F" },
-				31: { position_set: "D:$F88", position_actual: "D:$F8B", position_error: "D:$F91", current_id: "X:$FB9", current_iq: "Y:$FB9", speed_set: "D:$FC6", speed_actual: "D:$FEF" },
-				32: { position_set: "D:$1008", position_actual: "D:$100B", position_error: "D:$1011", current_id: "X:$1039", current_iq: "Y:$1039", speed_set: "D:$1046", speed_actual: "D:$106F" }
-			  };
-
-			  // 🎯 Обработчик выбора
-			  document.getElementById('motor-select').addEventListener('change', updateResult);
-			  document.getElementById('param-select').addEventListener('change', updateResult);
-
-			  function updateResult() {
-				const motor = document.getElementById('motor-select').value;
-				const param = document.getElementById('param-select').value;
-				const resultBox = document.getElementById('result-box');
-				const resultValue = document.getElementById('result-value');
-
-				if (motor && param) {
-				  const value = motorMap[motor][param];
-				  resultValue.textContent = value;
-				  resultBox.style.display = 'block';
-				} else {
-				  resultBox.style.display = 'none';
-				}
-			  }
-			
-		</script>
-	<img src="karta_pam.png" alt="">
-<!-- ✅ Конец блока -->
     </div>
 
     <!-- ВКЛАДКА 3 -->
     <div id="tab3" class="tab-content">
-      <h2> Коэфициент для положения </h2>
-			<!-- 🧮 БЛОК: РАСЧЁТ КОЭФФИЦИЕНТА -->
-			<div style="background: #f0f9ff; padding: 24px; border-radius: 12px; border: 2px solid #7B61FF; margin: 30px 0; box-shadow: 0 4px 12px rgba(123, 97, 255, 0.1);">
-			  <h3 style="color: #7B61FF; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-				<span>🧮</span>
-				<span>Расчёт коэффициента положения </span>
-			  </h3>
+      <h2>Коэффициент для положения</h2>
 
-			  <p style="margin-bottom: 16px; color: #1E293B;">
-				Формула: <strong>Коэффициент = 1 / 32 / Ix08 × (1000 / #x->)</strong>
-			  </p>
+      <div class="interactive-block">
+        <h3>🧮 Расчёт коэффициента положения</h3>
+        <p>Формула: <strong>Коэффициент = 1 / 32 / Ix08 × (1000 / #x->)</strong></p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
+          <div style="flex: 1; min-width: 200px;">
+            <label for="input-x">Введите Ix08:</label>
+            <input type="number" id="input-x" placeholder="Например: 5" step="any">
+          </div>
+          <div style="flex: 1; min-width: 200px;">
+            <label for="input-y">Введите #x-> (если 0, ставить 1000):</label>
+            <input type="number" id="input-y" placeholder="Например: 1000" step="any">
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+          <button onclick="calculateCoefficient()" style="background: #7B61FF; color: white; border: none;">🧮 Рассчитать</button>
+          <button onclick="resetCoefficient()" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;">🔄 Сбросить</button>
+        </div>
+        <div id="result-coeff" style="padding: 16px; background: #E0E7FF; border-radius: 8px; border-left: 4px solid #7B61FF; display: none; font-weight: 600;">
+          <span>Результат: </span><span id="coeff-value"></span>
+        </div>
+      </div>
 
-			  <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
-				<div style="flex: 1; min-width: 200px;">
-				  <label for="input-x" style="display: block; margin-bottom: 8px; font-weight: 500; color: #1E293B;">Введите Ix08:</label>
-				  <input type="number" id="input-x" placeholder="Например: 5" step="any" style="width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; background: white; font-size: 16px;">
-				</div>
+      <h2>Коэффициент для тока, использовать k(plot)</h2>
+      <img src="koef_privod.jpg" alt="Коэффициент для тока">
 
-				<div style="flex: 1; min-width: 200px;">
-				  <label for="input-y" style="display: block; margin-bottom: 8px; font-weight: 500; color: #1E293B;">Введите #x-> (если 0, ставить 1000):</label>
-				  <input type="number" id="input-y" placeholder="Например: 1000" step="any" style="width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; background: white; font-size: 16px;">
-				</div>
-			  </div>
-
-			  <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
-				<button onclick="calculateCoefficient()" style="padding: 12px 24px; background: #7B61FF; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; transition: background 0.3s; display: flex; align-items: center; gap: 8px;">
-				  🧮 Рассчитать
-				</button>
-				<button onclick="resetCoefficient()" style="padding: 12px 24px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 16px; transition: background 0.3s;">
-				  🔄 Сбросить
-				</button>
-			  </div>
-
-			  <div id="result-coeff" style="padding: 16px; background: #E0E7FF; border-radius: 8px; border-left: 4px solid #7B61FF; display: none; font-size: 18px; font-weight: 600; color: #1E293B; word-break: break-all;">
-				<span>Результат: </span><span id="coeff-value"></span>
-			  </div>
-			</div>
-
-			<script>
-			  function calculateCoefficient() {
-				const x = parseFloat(document.getElementById('input-x').value);
-				const y = parseFloat(document.getElementById('input-y').value);
-				const resultBox = document.getElementById('result-coeff');
-				const resultValue = document.getElementById('coeff-value');
-
-				// Проверка на корректность ввода
-				if (isNaN(x) || isNaN(y)) {
-				  alert('Пожалуйста, введите числовые значения для X и Y.');
-				  return;
-				}
-
-				if (x === 0 || y === 0) {
-				  alert('X и Y не могут быть равны нулю (деление на ноль невозможно).');
-				  return;
-				}
-
-				// Расчёт по формуле: 1 / 32 / X * (1000 / Y)
-				const coefficient = (1 / 32 / x) * (1000 / y);
-
-				resultValue.textContent = coefficient.toFixed(8); // 8 знаков после запятой
-				resultBox.style.display = 'block';
-			  }
-
-			  function resetCoefficient() {
-				document.getElementById('input-x').value = '';
-				document.getElementById('input-y').value = '';
-				document.getElementById('result-coeff').style.display = 'none';
-			  }
-			</script>
-			<h2> Коэфициент для тока, использовать k(plot)</h2>
-			<img src="koef_privod.jpg" alt="">
-<!-- ✅ Конец блока -->
     </div>
 
+    <!-- ВКЛАДКА 4 -->
     <div id="tab4" class="tab-content">
       <h2>Система данных кассет энкодеров (EnDat, BISS, SSI, Tamagawa)</h2>
-		<img src="shema_dannih.png" alt="">
+      <img src="shema_dannih.png" alt="Схема данных">
     </div>
 
+    <!-- ВКЛАДКА 5 -->
     <div id="tab5" class="tab-content">
-		<h2>Обозначение перемычек</h2>
-			<img src="MNC501_peremichki.png" alt="">
-		<h2>Выбор режима работы канала</h2>
-			<img src="MNC501_vibor_rezjima.png" alt="">
-			<img src="MNC501_vibor_rezjima2.png" alt="">
-		<h2>Master - slave</h2>
-			<p>	В случае подключении модуля не последним в шлейфе – перемычки терминальных резисторов должны быть удалены! </p>
-			<img src="MNC501_vibor_rezjima3.png" alt="">
+      <h2>Обозначение перемычек</h2>
+      <img src="MNC501_peremichki.png" alt="Перемычки MNC501">
+
+      <h2>Выбор режима работы канала</h2>
+      <img src="MNC501_vibor_rezjima.png" alt="Режим работы 1">
+      <img src="MNC501_vibor_rezjima2.png" alt="Режим работы 2">
+
+      <h2>Master - slave</h2>
+      <p>В случае подключении модуля не последним в шлейфе – перемычки терминальных резисторов должны быть удалены!</p>
+      <img src="MNC501_vibor_rezjima3.png" alt="Master-Slave">
     </div>
-
-
-    
-    <!--	<div id="tab6" class="tab-content">		-->
 
   </div>
 
   <script>
+    // 🎯 Переключение вкладок
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', function() {
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -391,6 +386,101 @@
         document.getElementById(tabId).classList.add('active');
       });
     });
+
+    // 📱 Переключение мобильного меню
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // 🗺️ Карта памяти — данные из PDF
+    const motorMap = {
+      1: { position_set: "D:$88", position_actual: "D:$8B", position_error: "D:$91", current_id: "X:$B9", current_iq: "Y:$B9", speed_set: "D:$C6", speed_actual: "D:$EF" },
+      2: { position_set: "D:$108", position_actual: "D:$10B", position_error: "D:$111", current_id: "X:$139", current_iq: "Y:$139", speed_set: "D:$146", speed_actual: "D:$16F" },
+      3: { position_set: "D:$188", position_actual: "D:$18B", position_error: "D:$191", current_id: "X:$1B9", current_iq: "Y:$1B9", speed_set: "D:$1C6", speed_actual: "D:$1EF" },
+      4: { position_set: "D:$208", position_actual: "D:$20B", position_error: "D:$211", current_id: "X:$239", current_iq: "Y:$239", speed_set: "D:$246", speed_actual: "D:$26F" },
+      5: { position_set: "D:$288", position_actual: "D:$28B", position_error: "D:$291", current_id: "X:$2B9", current_iq: "Y:$2B9", speed_set: "D:$2C6", speed_actual: "D:$2EF" },
+      6: { position_set: "D:$308", position_actual: "D:$30B", position_error: "D:$311", current_id: "X:$339", current_iq: "Y:$339", speed_set: "D:$346", speed_actual: "D:$36F" },
+      7: { position_set: "D:$388", position_actual: "D:$38B", position_error: "D:$391", current_id: "X:$3B9", current_iq: "Y:$3B9", speed_set: "D:$3C6", speed_actual: "D:$3EF" },
+      8: { position_set: "D:$408", position_actual: "D:$40B", position_error: "D:$411", current_id: "X:$439", current_iq: "Y:$439", speed_set: "D:$446", speed_actual: "D:$46F" },
+      9: { position_set: "D:$488", position_actual: "D:$48B", position_error: "D:$491", current_id: "X:$4B9", current_iq: "Y:$4B9", speed_set: "D:$4C6", speed_actual: "D:$4EF" },
+      10: { position_set: "D:$508", position_actual: "D:$50B", position_error: "D:$511", current_id: "X:$539", current_iq: "Y:$539", speed_set: "D:$546", speed_actual: "D:$56F" },
+      11: { position_set: "D:$588", position_actual: "D:$58B", position_error: "D:$591", current_id: "X:$5B9", current_iq: "Y:$5B9", speed_set: "D:$5C6", speed_actual: "D:$5EF" },
+      12: { position_set: "D:$608", position_actual: "D:$60B", position_error: "D:$611", current_id: "X:$639", current_iq: "Y:$639", speed_set: "D:$646", speed_actual: "D:$66F" },
+      13: { position_set: "D:$688", position_actual: "D:$68B", position_error: "D:$691", current_id: "X:$6B9", current_iq: "Y:$6B9", speed_set: "D:$6C6", speed_actual: "D:$6EF" },
+      14: { position_set: "D:$708", position_actual: "D:$70B", position_error: "D:$711", current_id: "X:$739", current_iq: "Y:$739", speed_set: "D:$746", speed_actual: "D:$76F" },
+      15: { position_set: "D:$788", position_actual: "D:$78B", position_error: "D:$791", current_id: "X:$7B9", current_iq: "Y:$7B9", speed_set: "D:$7C6", speed_actual: "D:$7EF" },
+      16: { position_set: "D:$808", position_actual: "D:$80B", position_error: "D:$811", current_id: "X:$839", current_iq: "Y:$839", speed_set: "D:$846", speed_actual: "D:$86F" },
+      17: { position_set: "D:$888", position_actual: "D:$88B", position_error: "D:$891", current_id: "X:$8B9", current_iq: "Y:$8B9", speed_set: "D:$8C6", speed_actual: "D:$8EF" },
+      18: { position_set: "D:$908", position_actual: "D:$90B", position_error: "D:$911", current_id: "X:$939", current_iq: "Y:$939", speed_set: "D:$946", speed_actual: "D:$96F" },
+      19: { position_set: "D:$988", position_actual: "D:$98B", position_error: "D:$991", current_id: "X:$9B9", current_iq: "Y:$9B9", speed_set: "D:$9C6", speed_actual: "D:$9EF" },
+      20: { position_set: "D:$A08", position_actual: "D:$A0B", position_error: "D:$A11", current_id: "X:$A39", current_iq: "Y:$A39", speed_set: "D:$A46", speed_actual: "D:$A6F" },
+      21: { position_set: "D:$A88", position_actual: "D:$A8B", position_error: "D:$A91", current_id: "X:$AB9", current_iq: "Y:$AB9", speed_set: "D:$AC6", speed_actual: "D:$AEF" },
+      22: { position_set: "D:$B08", position_actual: "D:$B0B", position_error: "D:$B11", current_id: "X:$B39", current_iq: "Y:$B39", speed_set: "D:$B46", speed_actual: "D:$B6F" },
+      23: { position_set: "D:$B88", position_actual: "D:$B8B", position_error: "D:$B91", current_id: "X:$BB9", current_iq: "Y:$BB9", speed_set: "D:$BC6", speed_actual: "D:$BEF" },
+      24: { position_set: "D:$C08", position_actual: "D:$C0B", position_error: "D:$C11", current_id: "X:$C39", current_iq: "Y:$C39", speed_set: "D:$C46", speed_actual: "D:$C6F" },
+      25: { position_set: "D:$C88", position_actual: "D:$C8B", position_error: "D:$C91", current_id: "X:$CB9", current_iq: "Y:$CB9", speed_set: "D:$CC6", speed_actual: "D:$CEF" },
+      26: { position_set: "D:$D08", position_actual: "D:$D0B", position_error: "D:$D11", current_id: "X:$D39", current_iq: "Y:$D39", speed_set: "D:$D46", speed_actual: "D:$D6F" },
+      27: { position_set: "D:$D88", position_actual: "D:$D8B", position_error: "D:$D91", current_id: "X:$DB9", current_iq: "Y:$DB9", speed_set: "D:$DC6", speed_actual: "D:$DEF" },
+      28: { position_set: "D:$E08", position_actual: "D:$E0B", position_error: "D:$E11", current_id: "X:$E39", current_iq: "Y:$E39", speed_set: "D:$E46", speed_actual: "D:$E6F" },
+      29: { position_set: "D:$E88", position_actual: "D:$E8B", position_error: "D:$E91", current_id: "X:$EB9", current_iq: "Y:$EB9", speed_set: "D:$EC6", speed_actual: "D:$EEF" },
+      30: { position_set: "D:$F08", position_actual: "D:$F0B", position_error: "D:$F11", current_id: "X:$F39", current_iq: "Y:$F39", speed_set: "D:$F46", speed_actual: "D:$F6F" },
+      31: { position_set: "D:$F88", position_actual: "D:$F8B", position_error: "D:$F91", current_id: "X:$FB9", current_iq: "Y:$FB9", speed_set: "D:$FC6", speed_actual: "D:$FEF" },
+      32: { position_set: "D:$1008", position_actual: "D:$100B", position_error: "D:$1011", current_id: "X:$1039", current_iq: "Y:$1039", speed_set: "D:$1046", speed_actual: "D:$106F" }
+    };
+
+    // 🎯 Обработчик выбора
+    document.getElementById('motor-select')?.addEventListener('change', updateResult);
+    document.getElementById('param-select')?.addEventListener('change', updateResult);
+
+    function updateResult() {
+      const motor = document.getElementById('motor-select')?.value;
+      const param = document.getElementById('param-select')?.value;
+      const resultBox = document.getElementById('result-box');
+      const resultValue = document.getElementById('result-value');
+
+      if (motor && param) {
+        const value = motorMap[motor][param];
+        resultValue.textContent = value;
+        resultBox.style.display = 'block';
+      } else {
+        resultBox.style.display = 'none';
+      }
+    }
+
+    // 🧮 Расчёт коэффициента
+    function calculateCoefficient() {
+      const xInput = document.getElementById('input-x');
+      const yInput = document.getElementById('input-y');
+      if (!xInput || !yInput) return;
+
+      const x = parseFloat(xInput.value);
+      const y = parseFloat(yInput.value);
+      const resultBox = document.getElementById('result-coeff');
+      const resultValue = document.getElementById('coeff-value');
+
+      if (isNaN(x) || isNaN(y)) {
+        alert('Пожалуйста, введите числовые значения.');
+        return;
+      }
+
+      if (x === 0 || y === 0) {
+        alert('Значения не могут быть нулевыми.');
+        return;
+      }
+
+      const coefficient = (1 / 32 / x) * (1000 / y);
+      resultValue.textContent = coefficient.toFixed(8);
+      resultBox.style.display = 'block';
+    }
+
+    function resetCoefficient() {
+      const xInput = document.getElementById('input-x');
+      const yInput = document.getElementById('input-y');
+      const resultBox = document.getElementById('result-coeff');
+      if (xInput) xInput.value = '';
+      if (yInput) yInput.value = '';
+      if (resultBox) resultBox.style.display = 'none';
+    }
   </script>
 
 </body>
