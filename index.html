@@ -871,21 +871,35 @@
 	  
     </div>
 	
+	<!-- ВКЛАДКА 9: Документация TP-100 -->
 	<div id="tab9" class="tab-content">
+	  <h2>📄 Документация TP-100</h2>
+	  <p>Документ для ознакомления:</p>
 
-		  <div style="width: 100%; height: 90vh; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden;">
-			<iframe 
-			  src="content/doc_tr_100.pdf" 
-			  width="100%" 
-			  height="100%" 
-			  style="border: none;"
-			  title="Карта памяти УЧПУ">
-			  <p>Ваш браузер не поддерживает встроенный просмотр PDF. 
-				 <a href="content/doc_tr_100.pdf" target="_blank">Скачать PDF</a>.
-			  </p>
-			</iframe>
-		  </div>
-		  
+	  <!-- Адаптивный контейнер для PDF -->
+	  <div style="width: 100%; height: 0; padding-bottom: 120%; position: relative; border: 1px solid #CBD5E1; border-radius: 8px; overflow: hidden; background: #f8fafc;">
+		<iframe 
+		  src="content/doc_tr_100.pdf" 
+		  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+		  title="Документация TP-100"
+		  loading="lazy">
+		  <p style="padding: 20px; text-align: center; color: #dc2626;">
+			Ваш браузер не поддерживает встроенный просмотр PDF.<br>
+			<a href="content/doc_tr_100.pdf" target="_blank" 
+			   style="display: inline-block; margin-top: 12px; padding: 10px 20px; background: #165DFF; color: white; text-decoration: none; border-radius: 6px;">
+			  📥 Скачать PDF
+			</a>
+		  </p>
+		</iframe>
+	  </div>
+
+	  <!-- Дополнительная кнопка на случай, если iframe не сработал -->
+	  <div style="margin-top: 16px; text-align: center;">
+		<a href="content/doc_tr_100.pdf" target="_blank" 
+		   style="display: inline-block; padding: 12px 24px; background: #165DFF; color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px;">
+		  📄 Открыть PDF в новой вкладке
+		</a>
+	  </div>
 	</div>
 	
 	<div id="tab10" class="tab-content">
@@ -912,11 +926,6 @@
         document.getElementById(tabId).classList.add('active');
       });
     });
-
-
-
-
-
 
   // 🎯 Переключение вкладок + сворачивание меню на мобильных
   document.querySelectorAll('.nav-item').forEach(item => {
@@ -956,52 +965,6 @@
       sidebar.classList.remove('open');
     }
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    // 📱 Переключение мобильного меню
-//    function toggleSidebar() {
-//      document.getElementById('sidebar').classList.toggle('open');
-//    }
 
     // 🗺️ Карта памяти — данные из PDF
     const motorMap = {
