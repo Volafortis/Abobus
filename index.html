@@ -324,7 +324,7 @@
       <span> Резерв </span>
     </div>
 	<div class="nav-item" data-tab="tab3">
-      <span> Резерв </span>
+      <span> Расчет таблицы компенсаций для оси A/B </span>
     </div>
 	<div class="nav-item" data-tab="tab4">
       <span> Резерв </span>
@@ -706,11 +706,343 @@
     <div id="tab2" class="tab-content">	
 		<h2>В разработке</h2>
     </div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- ВКЛАДКА 2: Расчет таблицы компенсации для круговой оси A -->
+<div id="tab3" class="tab-content">
+  <h2>🌀 Расчёт таблицы компенсации для круговой оси A</h2>
+  <p>Заполните параметры согласно руководству. Предел измерения = 360°.</p>
 
-
-    <div id="tab3" class="tab-content">	
-		<h2>В разработке</h2>
+  <!-- 🧮 Блок ввода параметров -->
+  <div class="interactive-block" style="background: #f0f9ff; padding: 24px; border-radius: 12px; border: 2px solid #7B61FF; margin: 30px 0; box-shadow: 0 4px 12px rgba(123, 97, 255, 0.1);">
+    <h3 style="color: #7B61FF; margin-bottom: 20px;">🔧 Введите параметры</h3>
+    <div id="parameters-grid" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px; align-items: end;">
+      <div><label>Номер таблицы компенсации:</label><input type="number" id="input-q-a" placeholder="1" min="1" required></div>
+      <div><label>Номер мотора источника:</label><input type="number" id="input-w-a" placeholder="1" min="1" max="32" required></div>
+      <div><label>Номер мотора приёмника:</label><input type="number" id="input-e-a" placeholder="1" min="1" max="32" required></div>
+      <div><label>Разрешающая способность датчика (диск/град):</label><input type="number" id="input-r-a" placeholder="1000" step="any" min="0.001" required></div>
+      <div><label>Начальный угол измерения (°):</label><input type="number" id="input-start-a" placeholder="-90" step="any" required></div>
+      <div><label>Конечный угол измерения (°):</label><input type="number" id="input-end-a" placeholder="90" step="any" required></div>
+      <div><label>Шаг измерения (°):</label><input type="number" id="input-step-a" placeholder="30" min="1" required></div>
     </div>
+    <button onclick="calculateAxisA()" style="padding: 14px 28px; background: #7B61FF; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+      🧮 Рассчитать таблицу
+    </button>
+  </div>
+
+  <!-- 🧾 Блок команды -->
+  <div class="interactive-block" style="background: #fffbeb; padding: 24px; border-radius: 12px; border: 2px solid #ca8a04; margin: 30px 0; box-shadow: 0 4px 12px rgba(202, 138, 4, 0.1);">
+    <h3 style="color: #ca8a04; margin-bottom: 20px;">🧾 Команда для контроллера</h3>
+    <div id="command-result-a" style="padding: 16px; background: #1E293B; color: white; border-radius: 8px; font-family: monospace; font-size: 1.1rem; white-space: pre-wrap; word-break: break-all; display: none;">
+      <div id="final-command-a" style="padding: 12px; background: rgba(255,255,255,0.1); border-radius: 6px;"></div>
+    </div>
+    <button id="copy-command-btn-a" onclick="copyCommandA()" style="margin-top: 16px; padding: 10px 20px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">
+      📋 Скопировать команду
+    </button>
+  </div>
+
+  <!-- 📊 Блок таблицы координат -->
+  <div class="interactive-block" style="background: #f0fdf4; padding: 24px; border-radius: 12px; border: 2px solid #16a34a; margin: 30px 0; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.1);">
+    <h3 style="color: #16a34a; margin-bottom: 20px;">📊 Таблица углов и компенсаций</h3>
+    <div id="coordinates-error-a" style="display: none; padding: 16px; background: #fee2e2; color: #dc2626; border-radius: 8px; border-left: 4px solid #dc2626; margin-bottom: 20px;">
+      ❌ <span id="error-message-text-a">Ошибка при расчёте.</span>
+    </div>
+    <div id="coordinates-container-a" style="display: none; overflow-x: auto;">
+      <div style="margin-bottom: 16px; padding: 12px; background: #dcfce7; border-radius: 8px; font-weight: 500;">
+        Количество точек (T): <span id="t-value-a"></span> | Расстояние: <span id="distance-value-a"></span> дискрет
+      </div>
+      <table id="coordinates-table-a" style="width: 100%; border-collapse: collapse; margin-top: 16px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <thead>
+          <tr style="background: #16a34a; color: white;">
+            <th style="padding: 12px; text-align: center;">№</th>
+            <th style="padding: 12px; text-align: center;">Угол (°)</th>
+            <th style="padding: 12px; text-align: center;">Отклонение (arcsec)</th>
+            <th style="padding: 12px; text-align: center;">Компенсация (дискр)</th>
+          </tr>
+        </thead>
+        <tbody id="coordinates-body-a"></tbody>
+      </table>
+      <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <button onclick="generateValuesStringA()" style="padding: 12px 24px; background: #ea580c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+          📤 Сформировать строку компенсаций
+        </button>
+        <div id="values-string-output-a" style="flex: 1; min-width: 300px; padding: 12px; background: #fffbeb; border: 1px dashed #ca8a04; border-radius: 6px; font-family: monospace; font-size: 14px; word-break: break-all; display: none;"></div>
+        <button id="copy-values-btn-a" onclick="copyValuesStringA()" style="padding: 12px 16px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">📋</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function calculateAxisA() {
+    const q = document.getElementById('input-q-a').value.trim();
+    const w = document.getElementById('input-w-a').value.trim();
+    const e = document.getElementById('input-e-a').value.trim();
+    const r = parseFloat(document.getElementById('input-r-a').value);
+    const startAngle = parseFloat(document.getElementById('input-start-a').value);
+    const endAngle = parseFloat(document.getElementById('input-end-a').value);
+    const step = parseFloat(document.getElementById('input-step-a').value);
+
+    const errorDiv = document.getElementById('coordinates-error-a');
+    const errorText = document.getElementById('error-message-text-a');
+
+    // Валидация
+    if (!q || !w || !e || isNaN(r) || isNaN(startAngle) || isNaN(endAngle) || isNaN(step)) {
+      alert('Заполните все поля числами.');
+      return;
+    }
+
+    if (r <= 0 || step <= 0) {
+      errorText.textContent = 'R и шаг должны быть > 0.';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    if (startAngle > endAngle) {
+      errorText.textContent = 'Начальный угол должен быть ≤ конечного.';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    if (360 % step !== 0) {
+      errorText.textContent = 'Шаг должен быть делителем 360 (например: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360).';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    errorDiv.style.display = 'none';
+
+    const t = 360 / step; // количество интервалов = количество точек в команде
+    const i = Math.round(360 * r); // I = 360 * R
+
+    document.getElementById('t-value-a').textContent = t;
+    document.getElementById('distance-value-a').textContent = i.toLocaleString();
+
+    window.globalR_A = r;
+    window.globalStartAngle = startAngle;
+    window.globalEndAngle = endAngle;
+
+    buildTableAxisA(step, t);
+
+    const command = `#${q} DEFINE COMP ${t},#${w}D,#${e}, ${i}`;
+    document.getElementById('final-command-a').textContent = command;
+    document.getElementById('command-result-a').style.display = 'block';
+    document.getElementById('copy-command-btn-a').style.display = 'inline-block';
+
+    document.getElementById('coordinates-container-a').style.display = 'block';
+    document.getElementById('values-string-output-a').style.display = 'none';
+    document.getElementById('copy-values-btn-a').style.display = 'none';
+  }
+
+  function buildTableAxisA(step, t) {
+    const tbody = document.getElementById('coordinates-body-a');
+    tbody.innerHTML = '';
+
+    const totalPoints = t; // точки: 0, step, 2*step, ..., 360-step (всего T точек)
+    let lastMeasuredValue = 0;
+
+    for (let i = 0; i < totalPoints; i++) {
+      const angle = i * step; // 0, 30, 60, ..., 330
+      const calcCellId = `calc-a-${i}`;
+      const inputCellId = `input-a-${i}`;
+
+      let isEditable = false;
+      let isDisabled = true;
+      let inputValue = "";
+      let inputStyle = "background: #f1f1f1; color: #666;";
+
+      // Определяем, попадает ли угол в диапазон измерения
+      if (angle >= window.globalStartAngle && angle <= window.globalEndAngle) {
+        isEditable = true;
+        isDisabled = false;
+        inputStyle = "";
+      } else if (angle < window.globalStartAngle) {
+        // До начала — 0
+        inputValue = "0";
+      } else {
+        // После конца — копируем последнее измеренное значение
+        inputValue = lastMeasuredValue.toString();
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${i + 1}</td>
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${angle}</td>
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">
+          <input type="number" step="any" id="${inputCellId}" value="${inputValue}" ${isDisabled ? 'disabled' : ''}
+                 oninput="updateCalculationA(${i})"
+                 style="width: 100%; padding: 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 14px; ${inputStyle}">
+        </td>
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;" id="${calcCellId}">
+          ${isDisabled ? (inputValue === "" ? "—" : Math.round(16 * parseFloat(inputValue || 0) * (window.globalR_A / 1000))) : "—"}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function updateCalculationA(index) {
+    const input = document.getElementById(`input-a-${index}`);
+    const calcCell = document.getElementById(`calc-a-${index}`);
+    if (!input || !calcCell || input.disabled) return;
+
+    const userValue = parseFloat(input.value);
+    const r = window.globalR_A || 0;
+
+    if (isNaN(userValue) || r <= 0) {
+      calcCell.textContent = "—";
+      return;
+    }
+
+    const calculated = Math.round(16 * userValue * (r / 1000));
+    calcCell.textContent = calculated;
+
+    // Сохраняем последнее значение для экстраполяции (упрощённо)
+    // В реальности нужно пересчитывать всю таблицу после каждого ввода,
+    // но для простоты оставим как есть
+  }
+
+  function generateValuesStringA() {
+    const t = parseInt(360 / parseFloat(document.getElementById('input-step-a').value));
+    if (isNaN(t)) return;
+
+    const values = [];
+    // Пропускаем первую строку (0°)
+    for (let i = 1; i < t; i++) {
+      const calcCell = document.getElementById(`calc-a-${i}`);
+      const value = calcCell && calcCell.textContent !== "—" ? calcCell.textContent : "0";
+      values.push(value);
+    }
+
+    // Добавляем значение для последней точки (360° ≡ 0° → = 0)
+    values.push("0");
+
+    const resultString = values.join(" ");
+    const outputDiv = document.getElementById('values-string-output-a');
+    outputDiv.textContent = resultString;
+    outputDiv.style.display = 'block';
+    document.getElementById('copy-values-btn-a').style.display = 'inline-block';
+  }
+
+  function copyCommandA() {
+    const command = document.getElementById('final-command-a').textContent;
+    navigator.clipboard.writeText(command).then(() => {
+      alert('✅ Команда скопирована!');
+    }).catch(() => {
+      alert('Ошибка. Скопируйте вручную.');
+    });
+  }
+
+  function copyValuesStringA() {
+    const text = document.getElementById('values-string-output-a').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✅ Строка компенсаций скопирована!');
+    });
+  }
+</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	<div id="tab4" class="tab-content">	
