@@ -354,387 +354,482 @@
   
 
     <!-- ВКЛАДКА 1 Расчет таблицы компенсаций для положительных координат -->
-    <div id="tab1" class="tab-content active">	
+	<!-- ВКЛАДКА 1: Расчет таблицы компенсаций для положительных координат -->
+<div id="tab1" class="tab-content active">	
 	
 	
 	
-			<h2>🧮 Расчёт таблицы компенсации</h2>
-			<p>Заполните параметры для построения таблицы компенсации</p>
 	
-				<!-- 🔍 Блок: Проверка количества точек для таблицы компенсации -->
-			<div class="interactive-block" style="background: #f0f7ff; padding: 24px; border-radius: 12px; border: 2px solid #165DFF; margin: 30px 0; box-shadow: 0 4px 12px rgba(22, 93, 255, 0.1);">
-			  <h3 style="color: #165DFF; margin-bottom: 20px;">🔍 Калькулятор вариаций количества точек для таблицы компенсации</h3>
-			  <p>Введите координаты начала и конца съёма данных — система покажет все допустимые значения количества точек и соответствующий шаг между ними.</p>
+	
+	
+	
+	
+	
+	<!-- 🔍 Блок: Калькулятор вариаций количества точек для таблицы компенсации -->
+<div class="interactive-block" style="background: #f0f7ff; padding: 24px; border-radius: 12px; border: 2px solid #165DFF; margin: 30px 0; box-shadow: 0 4px 12px rgba(22, 93, 255, 0.1);">
+  <h3 style="color: #165DFF; margin-bottom: 20px;">🔍 Калькулятор вариаций количества точек для таблицы компенсации</h3>
+  <p>Введите координаты начала и конца съёма данных — система покажет все допустимые значения количества точек и соответствующий шаг между ними.</p>
 
-			  <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 20px 0; align-items: end;">
-				<div style="flex: 1; min-width: 200px;">
-				  <label>Станочная координата начала (мм):</label>
-				  <input type="number" id="check-o" placeholder="Пример: 0" min="0" step="any" oninput="updateTOptions()" style="width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 16px; margin-top: 4px;">
-				</div>
-				<div style="flex: 1; min-width: 200px;">
-				  <label>Станочная координата конца (мм):</label>
-				  <input type="number" id="check-p" placeholder="Пример: 1000" min="0" step="any" oninput="updateTOptions()" style="width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 16px; margin-top: 4px;">
-				</div>
-			  </div>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 20px 0; align-items: end;">
+    <div style="flex: 1; min-width: 200px;">
+      <label>Станочная координата начала (O, мм):</label>
+      <input type="number" id="check-o" placeholder="Пример: 150" min="0" step="any" oninput="updateTOptions()" style="width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 16px; margin-top: 4px;">
+    </div>
+    <div style="flex: 1; min-width: 200px;">
+      <label>Станочная координата конца (P, мм):</label>
+      <input type="number" id="check-p" placeholder="Пример: 600" min="0" step="any" oninput="updateTOptions()" style="width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 16px; margin-top: 4px;">
+    </div>
+  </div>
 
-			  <div style="display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap;">
-				<button onclick="resetTOptions()" style="padding: 10px 20px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
-				  🔄 Сбросить
-				</button>
-			  </div>
+  <div style="display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap;">
+    <button onclick="resetTOptions()" style="padding: 10px 20px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
+      🔄 Сбросить
+    </button>
+  </div>
 
-			  <div id="t-options-result" style="display: none; margin-top: 20px;">
-				<h4 style="margin-bottom: 12px; color: #1E293B;">Допустимые значения кол-во точек измерения и шаги измерения:</h4>
-				<div style="overflow-x: auto;">
-				  <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-					<thead>
-					  <tr style="background: #165DFF; color: white;">
-						<th style="padding: 12px; text-align: center;">Кол-во точек</th>
-						<th style="padding: 12px; text-align: center;">Шаг между точками (мм)</th>
-					  </tr>
-					</thead>
-					<tbody id="t-options-body">
-					</tbody>
-				  </table>
-				</div>
-				<p style="margin-top: 12px; font-size: 0.9rem; color: #64748b;">
-				  💡 Выберите подходящее значение и используйте его в основном расчёте.
-				</p>
-			  </div>
+  <div id="t-options-result" style="display: none; margin-top: 20px;">
+    <h4 style="margin-bottom: 12px; color: #1E293B;">Допустимые варианты:</h4>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <thead>
+          <tr style="background: #165DFF; color: white;">
+            <th style="padding: 12px; text-align: center;">Кол-во точек в [O, P]</th>
+            <th style="padding: 12px; text-align: center;">Шаг между точками (мм)</th>
+          </tr>
+        </thead>
+        <tbody id="t-options-body"></tbody>
+      </table>
+    </div>
+    <p style="margin-top: 12px; font-size: 0.9rem; color: #64748b;">
+      💡 Выберите подходящий шаг и используйте его в основном расчёте.
+    </p>
+  </div>
 
-			  <div id="t-options-error" style="display: none; padding: 12px; background: #fee2e2; color: #dc2626; border-radius: 8px; margin-top: 16px;">
-				❌ Введите корректные значения координат.
-			  </div>
-			</div>
+  <div id="t-options-error" style="display: none; padding: 12px; background: #fee2e2; color: #dc2626; border-radius: 8px; margin-top: 16px;">
+    ❌ Введите корректные значения координат.
+  </div>
+</div>
 
-			<script>
-			  function updateTOptions() {
-				const oInput = document.getElementById('check-o');
-				const pInput = document.getElementById('check-p');
-				const resultDiv = document.getElementById('t-options-result');
-				const errorDiv = document.getElementById('t-options-error');
-				const tbody = document.getElementById('t-options-body');
+<script>
+  function updateTOptions() {
+    const oInput = document.getElementById('check-o');
+    const pInput = document.getElementById('check-p');
+    const resultDiv = document.getElementById('t-options-result');
+    const errorDiv = document.getElementById('t-options-error');
+    const tbody = document.getElementById('t-options-body');
 
-				const o = parseFloat(oInput?.value);
-				const p = parseFloat(pInput?.value);
+    const o = parseFloat(oInput?.value);
+    const p = parseFloat(pInput?.value);
 
-				// Скрыть всё
-				resultDiv.style.display = 'none';
-				errorDiv.style.display = 'none';
+    // Скрыть всё
+    resultDiv.style.display = 'none';
+    errorDiv.style.display = 'none';
 
-				if (isNaN(o) || isNaN(p) || o < 0 || p < 0) {
-				  if (oInput?.value !== '' || pInput?.value !== '') {
-					errorDiv.style.display = 'block';
-				  }
-				  return;
-				}
+    if (isNaN(o) || isNaN(p) || o < 0 || p < 0) {
+      if (oInput?.value !== '' || pInput?.value !== '') {
+        errorDiv.style.display = 'block';
+      }
+      return;
+    }
 
-				const totalDistance = o + p;
-				if (totalDistance === 0) {
-				  errorDiv.textContent = '❌ Сумма координат не может быть нулевой.';
-				  errorDiv.style.display = 'block';
-				  return;
-				}
+    if (p === 0) {
+      errorDiv.textContent = '❌ Координата P не может быть нулевой.';
+      errorDiv.style.display = 'block';
+      return;
+    }
 
-				const options = [];
-				for (let step = 1; step <= totalDistance; step++) {
-				  if (totalDistance % step === 0) {
-					const t = (totalDistance / step) + 1;
-					if (t >= 2 && Number.isInteger(t)) {
-					  options.push({ t: t, step: step });
-					}
-				  }
-				}
-				
-				options.sort((a, b) => a.t - b.t);
+    if (o >= p) {
+      errorDiv.textContent = '❌ O должно быть < P.';
+      errorDiv.style.display = 'block';
+      return;
+    }
 
-				if (options.length === 0) {
-				  errorDiv.textContent = '❌ Не найдено целых шагов для построения таблицы.';
-				  errorDiv.style.display = 'block';
-				  return;
-				}
+    // 🔑 Шаг должен быть делителем P (таблица от 0 до P)
+    const options = [];
+    for (let step = 1; step <= p; step++) {
+      if (p % step === 0) {
+        // Количество точек в полной таблице: от 0 до P → (P / step) + 1
+        const t = (p / step) + 1;
+        if (t >= 2 && Number.isInteger(t)) {
+          options.push({ t: t, step: step });
+        }
+      }
+    }
 
-				const limited = options.slice(0, 50);
+    options.sort((a, b) => a.t - b.t);
 
-				tbody.innerHTML = '';
-				limited.forEach(opt => {
-				  const tr = document.createElement('tr');
-				  tr.innerHTML = `
-					<td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${opt.t}</td>
-					<td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${opt.step}</td>
-				  `;
-				  tbody.appendChild(tr);
-				});
+    if (options.length === 0) {
+      errorDiv.textContent = '❌ Не найдено целых шагов, делящих P.';
+      errorDiv.style.display = 'block';
+      return;
+    }
 
-				resultDiv.style.display = 'block';
-			  }
+    const limited = options.slice(0, 50);
+    tbody.innerHTML = '';
+    limited.forEach(opt => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${Math.round(opt.t)}</td>
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${opt.step}</td>
+      `;
+      tbody.appendChild(tr);
+    });
 
-			  // 🔁 Функция сброса
-			  function resetTOptions() {
-				document.getElementById('check-o').value = '';
-				document.getElementById('check-p').value = '';
-				document.getElementById('t-options-result').style.display = 'none';
-				document.getElementById('t-options-error').style.display = 'none';
-			  }
-			</script>
+    resultDiv.style.display = 'block';
+  }
 
+  function resetTOptions() {
+    document.getElementById('check-o').value = '';
+    document.getElementById('check-p').value = '';
+    document.getElementById('t-options-result').style.display = 'none';
+    document.getElementById('t-options-error').style.display = 'none';
+  }
+</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+  <h2>🧮 Расчёт таблицы компенсации</h2>
+  <p>Заполните параметры. Шаг между точками должен быть делителем конечной координаты P.</p>
 
-					  <!-- 🧾 Блок Таблицы компенсаций -->
-					  <div class="interactive-block" style="background: #fffbeb; padding: 24px; border-radius: 12px; border: 2px solid #ca8a04; margin: 30px 0; box-shadow: 0 4px 12px rgba(202, 138, 4, 0.1);">
-						<h3 style="color: #ca8a04; margin-bottom: 20px;">🧾 Первая строчка с параметрами для таблицы компенсации (расчет после ввода параметров)</h3>
-						<div id="command-result" style="padding: 16px; background: #1E293B; color: white; border-radius: 8px; font-family: monospace; font-size: 1.1rem; white-space: pre-wrap; word-break: break-all; display: none;">
-						  <div id="final-command" style="padding: 12px; background: rgba(255,255,255,0.1); border-radius: 6px;"></div>
-						</div>
-						<button id="copy-command-btn" onclick="copyCommand()" style="margin-top: 16px; padding: 10px 20px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">
-						  📋 Скопировать команду
-						</button>
-					  </div>
+  <!-- 🧮 Блок ввода параметров -->
+  <div class="interactive-block" style="background: #f0f9ff; padding: 24px; border-radius: 12px; border: 2px solid #7B61FF; margin: 30px 0; box-shadow: 0 4px 12px rgba(123, 97, 255, 0.1);">
+    <h3 style="color: #7B61FF; margin-bottom: 20px;">🔧 Введите параметры</h3>
+    <div id="parameters-grid" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px; align-items: end;">
+      <div><label>Номер таблицы компенсации:</label><input type="number" id="input-q" placeholder="Пример: 1" min="1" required></div>
+      <div><label>Номер мотора источника:</label><input type="number" id="input-w" placeholder="Пример: 1" min="1" max="32" required></div>
+      <div><label>Номер мотора приёмника:</label><input type="number" id="input-e" placeholder="Пример: 1" min="1" max="32" required></div>
+      <div><label>Разрешающая способность датчика (диск/мм):</label><input type="number" id="input-r" placeholder="Пример: 1000" step="any" min="0.001" required></div>
+      <div><label>Станочная координата начала (мм):</label><input type="number" id="input-o" placeholder="Пример: 150" step="any" min="0" required></div>
+      <div><label>Станочная координата конца (мм):</label><input type="number" id="input-p" placeholder="Пример: 600" step="any" min="0" required></div>
+      <div><label>Шаг между точками (мм):</label><input type="number" id="input-y" placeholder="Пример: 50" step="any" min="0.001" required></div>
+    </div>
+    <button onclick="calculateAll()" style="padding: 14px 28px; background: #7B61FF; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+      🧮 Рассчитать всё
+    </button>
+  </div>
 
-					  <!-- 🧮 Блок ввода параметров -->
-					  <div class="interactive-block" style="background: #f0f9ff; padding: 24px; border-radius: 12px; border: 2px solid #7B61FF; margin: 30px 0; box-shadow: 0 4px 12px rgba(123, 97, 255, 0.1);">
-						<h3 style="color: #7B61FF; margin-bottom: 20px;">🔧 Введите параметры</h3>
+  <!-- 🧾 Блок команды -->
+  <div class="interactive-block" style="background: #fffbeb; padding: 24px; border-radius: 12px; border: 2px solid #ca8a04; margin: 30px 0; box-shadow: 0 4px 12px rgba(202, 138, 4, 0.1);">
+    <h3 style="color: #ca8a04; margin-bottom: 20px;">🧾 Команда для контроллера</h3>
+    <div id="command-result" style="padding: 16px; background: #1E293B; color: white; border-radius: 8px; font-family: monospace; font-size: 1.1rem; white-space: pre-wrap; word-break: break-all; display: none;">
+      <div id="final-command" style="padding: 12px; background: rgba(255,255,255,0.1); border-radius: 6px;"></div>
+    </div>
+    <button id="copy-command-btn" onclick="copyCommand()" style="margin-top: 16px; padding: 10px 20px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">
+      📋 Скопировать команду
+    </button>
+  </div>
 
-						<div id="parameters-grid" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px; align-items: end;">
-						  <div><label>Номер таблицы компенсации:</label><input type="number" id="input-q" placeholder="Пример: 1" min="1" required></div>
-						  <div><label>Номер мотора источника:</label><input type="number" id="input-w" placeholder="Пример: 1" min="1" max="32" required></div>
-						  <div><label>Номер мотора приёмника:</label><input type="number" id="input-e" placeholder="Пример: 1" min="1" max="32" required></div>
-						  <div><label>Разрешающая способность датчика (диск/мм):</label><input type="number" id="input-r" placeholder="Пример: 1000" step="any" min="0.001" required></div>
-						  <div><label>Кол-во точек измерения:</label><input type="number" id="input-t" placeholder="Пример: 11" min="2" required title="T должно быть >= 2"></div>
-						  <div><label>Станочная координата начала (мм):</label><input type="number" id="input-o" placeholder="Пример: 0" step="any" required></div>
-						  <div><label>Станочная координата конца (мм):</label><input type="number" id="input-p" placeholder="Пример: 1000" step="any" required></div>
-						</div>
+  <!-- 📊 Блок таблицы координат -->
+  <div class="interactive-block" style="background: #f0fdf4; padding: 24px; border-radius: 12px; border: 2px solid #16a34a; margin: 30px 0; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.1);">
+    <h3 style="color: #16a34a; margin-bottom: 20px;">📊 Таблица координат и компенсаций</h3>
+    <div id="coordinates-error" style="display: none; padding: 16px; background: #fee2e2; color: #dc2626; border-radius: 8px; border-left: 4px solid #dc2626; margin-bottom: 20px;">
+      ❌ <span id="error-message-text">Ошибка при расчёте.</span>
+    </div>
+    <div id="coordinates-container" style="display: none; overflow-x: auto;">
+      <div style="margin-bottom: 16px; padding: 12px; background: #dcfce7; border-radius: 8px; font-weight: 500;">
+        Количество точек (T): <span id="t-value"></span> | Расстояние: <span id="distance-value"></span> дискрет
+      </div>
+      <table id="coordinates-table" style="width: 100%; border-collapse: collapse; margin-top: 16px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <thead>
+          <tr style="background: #16a34a; color: white;">
+            <th style="padding: 12px; text-align: center;">№</th>
+            <th style="padding: 12px; text-align: center;">Станочная координата (мм)</th>
+            <th style="padding: 12px; text-align: center;">Отклонение по интерферометру (мкм)</th>
+            <th style="padding: 12px; text-align: center;">Компенсация табличная (дискр)</th>
+          </tr>
+        </thead>
+        <tbody id="coordinates-body"></tbody>
+      </table>
+      <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <button onclick="generateValuesString()" style="padding: 12px 24px; background: #ea580c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+          📤 Сформировать строку компенсаций
+        </button>
+        <div id="values-string-output" style="flex: 1; min-width: 300px; padding: 12px; background: #fffbeb; border: 1px dashed #ca8a04; border-radius: 6px; font-family: monospace; font-size: 14px; word-break: break-all; display: none;"></div>
+        <button id="copy-values-btn" onclick="copyValuesString()" style="padding: 12px 16px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">📋</button>
+      </div>
+    </div>
+  </div>
 
-						<button onclick="calculateAll()" style="padding: 14px 28px; background: #7B61FF; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
-						  🧮 Рассчитать всё
-						</button>
-					  </div>
+  <script>
+    function calculateAll() {
+      const q = document.getElementById('input-q').value.trim();
+      const w = document.getElementById('input-w').value.trim();
+      const e = document.getElementById('input-e').value.trim();
+      const r = parseFloat(document.getElementById('input-r').value);
+      const o = parseFloat(document.getElementById('input-o').value);
+      const p = parseFloat(document.getElementById('input-p').value);
+      const y = parseFloat(document.getElementById('input-y').value);
 
-					  <!-- 📊 Блок таблицы координат -->
-					  <div class="interactive-block" style="background: #f0fdf4; padding: 24px; border-radius: 12px; border: 2px solid #16a34a; margin: 30px 0; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.1);">
-						<h3 style="color: #16a34a; margin-bottom: 20px;">📊 Таблица координат и компенсаций</h3>
+      // Валидация
+      if (!q || !w || !e || isNaN(r) || isNaN(o) || isNaN(p) || isNaN(y)) {
+        alert('Заполните все поля числами.');
+        return;
+      }
 
-						<div id="coordinates-error" style="display: none; padding: 16px; background: #fee2e2; color: #dc2626; border-radius: 8px; border-left: 4px solid #dc2626; margin-bottom: 20px;">
-						  ❌ <span id="error-message-text">Шаг между точками не целый.</span>
-						</div>
+      if (o < 0 || p < 0 || y <= 0 || r <= 0) {
+        document.getElementById('error-message-text').textContent = 'O, P ≥ 0; Y, R > 0.';
+        document.getElementById('coordinates-error').style.display = 'block';
+        return;
+      }
 
-						<div id="coordinates-container" style="display: none; overflow-x: auto;">
-						  <div style="margin-bottom: 16px; padding: 12px; background: #dcfce7; border-radius: 8px; font-weight: 500;">
-							Шаг : <span id="step-value"></span> мм | Расстояние : <span id="distance-value"></span> дискрет
-						  </div>
-						  <table id="coordinates-table" style="width: 100%; border-collapse: collapse; margin-top: 16px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-							<thead>
-							  <tr style="background: #16a34a; color: white;">
-								<th style="padding: 12px; text-align: center;">№</th>
-								<th style="padding: 12px; text-align: center;">Станочная координата (мм)</th>
-								<th style="padding: 12px; text-align: center;">Отклонение по интерферометру (мкм)</th>
-								<th style="padding: 12px; text-align: center;">Компенсация табличная (дискр)</th>
-							  </tr>
-							</thead>
-							<tbody id="coordinates-body">
-							</tbody>
-						  </table>
+      if (p <= o) {
+        document.getElementById('error-message-text').textContent = 'Конечная координата P должна быть > начала O.';
+        document.getElementById('coordinates-error').style.display = 'block';
+        return;
+      }
 
-						  <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-							<button onclick="generateValuesString()" style="padding: 12px 24px; background: #ea580c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
-							  📤 Сформировать строку компенсаций
-							</button>
-							<div id="values-string-output" style="flex: 1; min-width: 300px; padding: 12px; background: #fffbeb; border: 1px dashed #ca8a04; border-radius: 6px; font-family: monospace; font-size: 14px; word-break: break-all; display: none;"></div>
-							<button id="copy-values-btn" onclick="copyValuesString()" style="padding: 12px 16px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">📋</button>
-						  </div>
-						</div>
-					  </div>
+      // 🔑 Проверка: P должно делиться на Y без остатка
+      if (Math.abs(p % y) > 1e-9) {
+        document.getElementById('error-message-text').textContent = 'Шаг Y должен быть делителем координаты P (P % Y = 0).';
+        document.getElementById('coordinates-error').style.display = 'block';
+        return;
+      }
 
-					<script>
-					  // Стилизация инпутов
-					  document.addEventListener('DOMContentLoaded', function() {
-						const inputs = document.querySelectorAll('#tab6 input');
-						inputs.forEach(input => {
-						  input.style.width = '100%';
-						  input.style.padding = '12px';
-						  input.style.border = '1px solid #CBD5E1';
-						  input.style.borderRadius = '8px';
-						  input.style.background = 'white';
-						  input.style.fontSize = '16px';
-						  input.style.marginTop = '4px';
-						});
-					  });
+      // 🔑 Автоматический расчёт T
+      const t = Math.round(p / y) + 1; // точки: 0, Y, 2Y, ..., P → всего (P/Y + 1)
 
-					  // Основная функция расчёта
-					  function calculateAll() {
-						const q = document.getElementById('input-q').value.trim();
-						const w = document.getElementById('input-w').value.trim();
-						const e = document.getElementById('input-e').value.trim();
-						const r = parseFloat(document.getElementById('input-r').value);
-						const t = parseInt(document.getElementById('input-t').value);
-						const o = parseFloat(document.getElementById('input-o').value);
-						const p = parseFloat(document.getElementById('input-p').value);
+      document.getElementById('coordinates-error').style.display = 'none';
+      const i = Math.round(Math.abs(y * t * r));
+      window.globalR = r;
+      document.getElementById('t-value').textContent = t;
+      document.getElementById('distance-value').textContent = i.toLocaleString();
 
-						// Валидация: все поля заполнены числами
-						if (!q || !w || !e || isNaN(r) || isNaN(t) || isNaN(o) || isNaN(p)) {
-						  alert('Заполните все поля числами.');
-						  return;
-						}
+      // Строим таблицу от 0 до P + Y
+      buildCoordinatesTable(o, p, y, t);
 
-						// 🔒 Запрет отрицательных значений для O и P
-						if (o < 0 || p < 0) {
-						  document.getElementById('error-message-text').textContent = 'Ввод координаты с отрицательным значением запрещен';
-						  document.getElementById('coordinates-error').style.display = 'block';
-						  document.getElementById('coordinates-container').style.display = 'none';
-						  document.getElementById('command-result').style.display = 'none';
-						  return;
-						}
+      // Команда без +1
+      const command = `#${q} DEFINE COMP ${t},#${w}D,#${e}, ${i}`;
+      document.getElementById('final-command').textContent = command;
+      document.getElementById('command-result').style.display = 'block';
+      document.getElementById('copy-command-btn').style.display = 'inline-block';
 
-						if (t < 2 || r <= 0) {
-						  document.getElementById('error-message-text').textContent = 'T должно быть >= 2, R > 0.';
-						  document.getElementById('coordinates-error').style.display = 'block';
-						  return;
-						}
+      document.getElementById('coordinates-container').style.display = 'block';
+      document.getElementById('values-string-output').style.display = 'none';
+      document.getElementById('copy-values-btn').style.display = 'none';
+    }
 
-						// 🔑 Формула шага: Y = (|O| + |P|) / (T - 1) → но O и P уже >= 0
-						const y = (o + p) / (t - 1);
+    function buildCoordinatesTable(o, p, step, t) {
+      const tbody = document.getElementById('coordinates-body');
+      tbody.innerHTML = '';
 
-						if (!Number.isInteger(y)) {
-						  document.getElementById('error-message-text').textContent = 'Шаг между точками не целый. Правильность ввода параметров.';
-						  document.getElementById('coordinates-error').style.display = 'block';
-						  document.getElementById('coordinates-container').style.display = 'none';
-						  document.getElementById('command-result').style.display = 'none';
-						  return;
-						}
+      // Общее расстояние = p + step (как в примере: 600 + 50)
+      const virtualEnd = p + step;
+      const points = [];
 
-						document.getElementById('coordinates-error').style.display = 'none';
+      let coord = 0;
+      while (coord <= virtualEnd + 0.001) {
+        points.push(coord);
+        coord += step;
+      }
 
-						// I = |Y * T * R| → целое число
-						const i = Math.round(Math.abs(y * t * r));
+      if (Math.abs(points[points.length - 1] - virtualEnd) > 0.001) {
+        points.push(virtualEnd);
+      }
 
-						// Сохраняем R глобально для расчёта компенсации
-						window.globalR = r;
+      points.forEach((coord, i) => {
+        const calcCellId = `calc-${i}`;
+        const inputCellId = `input-${i}`;
 
-						// Показываем значения
-						document.getElementById('step-value').textContent = y;
-						document.getElementById('distance-value').textContent = i.toLocaleString();
+        const isVirtual = coord < o || coord > p;
+        const isZeroPoint = coord === 0;
 
-						// Строим таблицу координат от -O до +P (как в примере: -500 → 500)
-						buildCoordinatesTable(-o, p, y, t);
+        const isDisabled = isVirtual || isZeroPoint;
+        const inputValue = isDisabled ? "0" : "";
+        const inputStyle = isDisabled ? "background: #f1f1f1; color: #666;" : "";
 
-						// Генерируем команду БЕЗ СКОБОК
-						const command = `#${q} DEFINE COMP ${t + 1},#${w}D,#${e}, ${i}`;
-						document.getElementById('final-command').textContent = command;
-						document.getElementById('command-result').style.display = 'block';
-						document.getElementById('copy-command-btn').style.display = 'inline-block';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${i + 1}</td>
+          <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${coord}</td>
+          <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">
+            <input type="number" step="any" id="${inputCellId}" value="${inputValue}" ${isDisabled ? 'disabled' : ''}
+                   oninput="updateCalculation(${i})"
+                   style="width: 100%; padding: 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 14px; ${inputStyle}">
+          </td>
+          <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;" id="${calcCellId}">
+            ${isDisabled ? "0" : "—"}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
 
-						document.getElementById('coordinates-container').style.display = 'block';
-						document.getElementById('values-string-output').style.display = 'none';
-						document.getElementById('copy-values-btn').style.display = 'none';
-					  }
+      window.totalTableRows = points.length;
+    }
 
-					  // Построение таблицы координат от -O до +P
-					  function buildCoordinatesTable(start, end, step, count) {
-						const tbody = document.getElementById('coordinates-body');
-						tbody.innerHTML = '';
+    function updateCalculation(index) {
+      const input = document.getElementById(`input-${index}`);
+      const calcCell = document.getElementById(`calc-${index}`);
+      if (!input || !calcCell || input.disabled) return;
 
-						let current = start;
-						const totalPoints = count;
+      const userValue = parseFloat(input.value);
+      const r = window.globalR || 0;
 
-						for (let i = 0; i < totalPoints; i++) {
-						  const calcCellId = `calc-${i}`;
-						  const inputCellId = `input-${i}`;
+      if (isNaN(userValue) || r <= 0) {
+        calcCell.textContent = "—";
+        return;
+      }
 
-						  const tr = document.createElement('tr');
-						  tr.innerHTML = `
-							<td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${i + 1}</td>
-							<td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${current}</td>
-							<td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">
-							  <input type="number" step="any" id="${inputCellId}" placeholder="мкм" 
-									 oninput="updateCalculation(${i})"
-									 style="width: 100%; padding: 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 14px;">
-							</td>
-							<td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;" id="${calcCellId}">
-							  —
-							</td>
-						  `;
-						  tbody.appendChild(tr);
+      const calculated = Math.round(16 * userValue * (r / 1000));
+      calcCell.textContent = calculated;
+    }
 
-						  current += step;
-						}
+    function generateValuesString() {
+      const totalRows = window.totalTableRows || 0;
+      if (totalRows === 0) return;
 
-						// Дополнительная строка с 0
-						const lastIdx = totalPoints;
-						const trZero = document.createElement('tr');
-						trZero.innerHTML = `
-						  <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee; background: #f0fdf4;"><strong>Мнимая точка</strong></td>
-						  <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee; background: #f0fdf4;"><strong>0</strong></td>
-						  <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee; background: #f0fdf4;">
-							<input type="number" step="any" id="input-${lastIdx}" placeholder="мкм" 
-								   oninput="updateCalculation(${lastIdx})"
-								   style="width: 100%; padding: 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 14px;">
-						  </td>
-						  <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee; background: #f0fdf4;" id="calc-${lastIdx}">
-							—
-						  </td>
-						`;
-						tbody.appendChild(trZero);
-					  }
+      const values = [];
+      // Пропускаем первую строку (0 мм)
+      for (let i = 1; i < totalRows; i++) {
+        const calcCell = document.getElementById(`calc-${i}`);
+        const value = calcCell && calcCell.textContent !== "—" ? calcCell.textContent : "0";
+        values.push(value);
+      }
 
-					  // Обновление расчёта → целое число, с использованием R
-					  function updateCalculation(index) {
-						const input = document.getElementById(`input-${index}`);
-						const calcCell = document.getElementById(`calc-${index}`);
+      const resultString = values.join(" ");
+      const outputDiv = document.getElementById('values-string-output');
+      outputDiv.textContent = resultString;
+      outputDiv.style.display = 'block';
+      document.getElementById('copy-values-btn').style.display = 'inline-block';
+    }
 
-						if (!input || !calcCell) return;
+    function copyCommand() {
+      const command = document.getElementById('final-command').textContent;
+      navigator.clipboard.writeText(command).then(() => {
+        alert('✅ Команда скопирована!');
+      }).catch(() => {
+        alert('Ошибка. Скопируйте вручную.');
+      });
+    }
 
-						const userValue = parseFloat(input.value);
-						const r = window.globalR || 0;
-
-						if (isNaN(userValue) || r <= 0) {
-						  calcCell.textContent = "—";
-						  return;
-						}
-
-						// 🔑 Формула: 16 * отклонение * (R / 1000) → целое
-						const calculated = Math.round(16 * userValue * (r / 1000));
-						calcCell.textContent = calculated;
-					  }
-
-					  // Генерация строки компенсаций
-					  function generateValuesString() {
-						const t = parseInt(document.getElementById('input-t').value);
-						if (isNaN(t)) return;
-
-						const values = [];
-						const totalRows = t + 1; // T точек + 1 доп. строка
-
-						for (let i = 0; i < totalRows; i++) {
-						  const calcCell = document.getElementById(`calc-${i}`);
-						  values.push(calcCell && calcCell.textContent !== "—" ? calcCell.textContent : "0");
-						}
-
-						const resultString = values.join(" ");
-						const outputDiv = document.getElementById('values-string-output');
-						outputDiv.textContent = resultString;
-						outputDiv.style.display = 'block';
-						document.getElementById('copy-values-btn').style.display = 'inline-block';
-					  }
-
-					  // Копирование команды
-					  function copyCommand() {
-						const command = document.getElementById('final-command').textContent;
-						navigator.clipboard.writeText(command).then(() => {
-						  alert('✅ Команда скопирована!');
-						}).catch(() => {
-						  alert('Ошибка. Скопируйте вручную.');
-						});
-					  }
-
-					  // Копирование строки компенсаций
-					  function copyValuesString() {
-						const text = document.getElementById('values-string-output').textContent;
-						navigator.clipboard.writeText(text).then(() => {
-						  alert('✅ Строка компенсаций скопирована!');
-						});
-					  }
-					</script>
-		</div>
-
+    function copyValuesString() {
+      const text = document.getElementById('values-string-output').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('✅ Строка компенсаций скопирована!');
+      });
+    }
+  </script>
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	<!-- ВКЛАДКА 2 Расчет таблицы компенсаций для отрицательных координат -->
     <div id="tab2" class="tab-content">	
