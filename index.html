@@ -351,18 +351,11 @@
 
   <!-- 📖 ОСНОВНОЙ КОНТЕНТ -->
   <div class="main-content">
-  
+  <h2> Функционал не протестирован, могут попадаться ошибки!</h2>
 
     <!-- ВКЛАДКА 1 Расчет таблицы компенсаций для положительных координат -->
 	<!-- ВКЛАДКА 1: Расчет таблицы компенсаций для положительных координат -->
 <div id="tab1" class="tab-content active">	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	<!-- 🔍 Блок: Калькулятор вариаций количества точек для таблицы компенсации -->
@@ -433,13 +426,13 @@
     }
 
     if (p === 0) {
-      errorDiv.textContent = '❌ Координата P не может быть нулевой.';
+      errorDiv.textContent = '❌ Конечная Координата не может быть нулевой.';
       errorDiv.style.display = 'block';
       return;
     }
 
     if (o >= p) {
-      errorDiv.textContent = '❌ O должно быть < P.';
+      errorDiv.textContent = '❌ Начальная координата должна быть больше конечной.';
       errorDiv.style.display = 'block';
       return;
     }
@@ -459,7 +452,7 @@
     options.sort((a, b) => a.t - b.t);
 
     if (options.length === 0) {
-      errorDiv.textContent = '❌ Не найдено целых шагов, делящих P.';
+      errorDiv.textContent = '❌ Не найдено целых шагов.';
       errorDiv.style.display = 'block';
       return;
     }
@@ -487,15 +480,8 @@
 </script>
 	
 	
-	
-	
-	
-	
-	
-	
-	
   <h2>🧮 Расчёт таблицы компенсации</h2>
-  <p>Заполните параметры. Шаг между точками должен быть делителем конечной координаты P.</p>
+  <p>Заполните параметры. Шаг между точками должен быть делителем конечной координаты.</p>
 
   <!-- 🧮 Блок ввода параметров -->
   <div class="interactive-block" style="background: #f0f9ff; padding: 24px; border-radius: 12px; border: 2px solid #7B61FF; margin: 30px 0; box-shadow: 0 4px 12px rgba(123, 97, 255, 0.1);">
@@ -516,7 +502,7 @@
 
   <!-- 🧾 Блок команды -->
   <div class="interactive-block" style="background: #fffbeb; padding: 24px; border-radius: 12px; border: 2px solid #ca8a04; margin: 30px 0; box-shadow: 0 4px 12px rgba(202, 138, 4, 0.1);">
-    <h3 style="color: #ca8a04; margin-bottom: 20px;">🧾 Команда для контроллера</h3>
+    <h3 style="color: #ca8a04; margin-bottom: 20px;">🧾 Первая строка таблицы компенсации с параметрами</h3>
     <div id="command-result" style="padding: 16px; background: #1E293B; color: white; border-radius: 8px; font-family: monospace; font-size: 1.1rem; white-space: pre-wrap; word-break: break-all; display: none;">
       <div id="final-command" style="padding: 12px; background: rgba(255,255,255,0.1); border-radius: 6px;"></div>
     </div>
@@ -527,13 +513,13 @@
 
   <!-- 📊 Блок таблицы координат -->
   <div class="interactive-block" style="background: #f0fdf4; padding: 24px; border-radius: 12px; border: 2px solid #16a34a; margin: 30px 0; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.1);">
-    <h3 style="color: #16a34a; margin-bottom: 20px;">📊 Таблица координат и компенсаций</h3>
+    <h3 style="color: #16a34a; margin-bottom: 20px;">📊 Таблица для составления компенсации</h3>
     <div id="coordinates-error" style="display: none; padding: 16px; background: #fee2e2; color: #dc2626; border-radius: 8px; border-left: 4px solid #dc2626; margin-bottom: 20px;">
       ❌ <span id="error-message-text">Ошибка при расчёте.</span>
     </div>
     <div id="coordinates-container" style="display: none; overflow-x: auto;">
       <div style="margin-bottom: 16px; padding: 12px; background: #dcfce7; border-radius: 8px; font-weight: 500;">
-        Количество точек (T): <span id="t-value"></span> | Расстояние: <span id="distance-value"></span> дискрет
+        Количество точек : <span id="t-value"></span> | Расстояние: <span id="distance-value"></span> дискрет
       </div>
       <table id="coordinates-table" style="width: 100%; border-collapse: collapse; margin-top: 16px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
         <thead>
@@ -548,7 +534,7 @@
       </table>
       <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
         <button onclick="generateValuesString()" style="padding: 12px 24px; background: #ea580c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
-          📤 Сформировать строку компенсаций
+          📤 Сформировать строку компенсации
         </button>
         <div id="values-string-output" style="flex: 1; min-width: 300px; padding: 12px; background: #fffbeb; border: 1px dashed #ca8a04; border-radius: 6px; font-family: monospace; font-size: 14px; word-break: break-all; display: none;"></div>
         <button id="copy-values-btn" onclick="copyValuesString()" style="padding: 12px 16px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">📋</button>
@@ -579,14 +565,14 @@
       }
 
       if (p <= o) {
-        document.getElementById('error-message-text').textContent = 'Конечная координата P должна быть > начала O.';
+        document.getElementById('error-message-text').textContent = 'Конечная координата должна быть больше начальной.';
         document.getElementById('coordinates-error').style.display = 'block';
         return;
       }
 
       // 🔑 Проверка: P должно делиться на Y без остатка
       if (Math.abs(p % y) > 1e-9) {
-        document.getElementById('error-message-text').textContent = 'Шаг Y должен быть делителем координаты P (P % Y = 0).';
+        document.getElementById('error-message-text').textContent = 'Шаг должен быть делителем конечной координаты.';
         document.getElementById('coordinates-error').style.display = 'block';
         return;
       }
@@ -716,121 +702,6 @@
   </script>
 </div>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	<!-- ВКЛАДКА 2 Расчет таблицы компенсаций для отрицательных координат -->
     <div id="tab2" class="tab-content">	
 		<h2>В разработке</h2>
@@ -1005,7 +876,8 @@
 			  По вопросам писать сюда
 			</a>
 			<p></p>
-			<p>Upd 1. Добавлен калькулятор таблицы компенсаций положительных координат. Добавлен базовый материал из документации.</p>
+			<p>Upd 1.(24.09.2025)Добавлен калькулятор таблицы компенсаций положительных координат. Добавлен базовый материал из документации.</p>
+			<p>Upd 2.(25.09.2025) Исправление формулы просчета таблицы компенсаций. Добавление калькулятора доступных шагов измерения.</p>
 	</div>
 	
   </div>
