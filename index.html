@@ -327,7 +327,7 @@
       <span> Расчет таблицы компенсаций для оси A/B </span>
     </div>
 	<div class="nav-item" data-tab="tab4">
-      <span> Резерв </span>
+      <span> Расчет таблицы компенсаций для отрицательных координат </span>
     </div>
     <div class="nav-item" data-tab="tab5">
       <span> Карта памяти для графиков </span>
@@ -995,14 +995,419 @@
 	
 	
 	
-
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- ВКЛАДКА 4: Расчет таблицы компенсации для отрицательных координат -->
+<div id="tab4" class="tab-content">
+  <h2>🧮 Расчёт таблицы компенсации для отрицательных координат</h2>
+  <p>Заполните параметры. Таблица строится с виртуальными точками в обе стороны от 0.</p>
 
-	<div id="tab4" class="tab-content">	
-		<h2>В разработке</h2>
+  <!-- 🧾 Блок команды -->
+  <div class="interactive-block" style="background: #fffbeb; padding: 24px; border-radius: 12px; border: 2px solid #ca8a04; margin: 30px 0; box-shadow: 0 4px 12px rgba(202, 138, 4, 0.1);">
+    <h3 style="color: #ca8a04; margin-bottom: 20px;">🧾 Команда для контроллера</h3>
+    <div id="command-result-neg" style="padding: 16px; background: #1E293B; color: white; border-radius: 8px; font-family: monospace; font-size: 1.1rem; white-space: pre-wrap; word-break: break-all; display: none;">
+      <div id="final-command-neg" style="padding: 12px; background: rgba(255,255,255,0.1); border-radius: 6px;"></div>
     </div>
+    <button id="copy-command-btn-neg" onclick="copyCommandNeg()" style="margin-top: 16px; padding: 10px 20px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">
+      📋 Скопировать команду
+    </button>
+  </div>
 
+  <!-- 🧮 Блок ввода параметров -->
+  <div class="interactive-block" style="background: #f0f9ff; padding: 24px; border-radius: 12px; border: 2px solid #7B61FF; margin: 30px 0; box-shadow: 0 4px 12px rgba(123, 97, 255, 0.1);">
+    <h3 style="color: #7B61FF; margin-bottom: 20px;">🔧 Введите параметры</h3>
+    <div id="parameters-grid" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px; align-items: end;">
+      <div><label>Номер таблицы компенсации:</label><input type="number" id="input-q-neg" placeholder="1" min="1" required></div>
+      <div><label>Номер мотора источника:</label><input type="number" id="input-w-neg" placeholder="1" min="1" max="32" required></div>
+      <div><label>Номер мотора приёмника:</label><input type="number" id="input-e-neg" placeholder="1" min="1" max="32" required></div>
+      <div><label>Разрешающая способность датчика (диск/мм):</label><input type="number" id="input-r-neg" placeholder="1000" step="any" min="0.001" required></div>
+      <div><label>Начало измерения O (мм):</label><input type="number" id="input-o-neg" placeholder="-550" step="any" required></div>
+      <div><label>Конец измерения P (мм):</label><input type="number" id="input-p-neg" placeholder="-150" step="any" required></div>
+      <div><label>Шаг измерения Y (мм):</label><input type="number" id="input-y-neg" placeholder="50" min="1" required></div>
+    </div>
+    <button onclick="calculateNegativeAxis()" style="padding: 14px 28px; background: #7B61FF; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+      🧮 Рассчитать таблицу
+    </button>
+  </div>
+
+  <!-- 📊 Блок таблицы координат -->
+  <div class="interactive-block" style="background: #f0fdf4; padding: 24px; border-radius: 12px; border: 2px solid #16a34a; margin: 30px 0; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.1);">
+    <h3 style="color: #16a34a; margin-bottom: 20px;">📊 Таблица координат и компенсаций</h3>
+    <div id="coordinates-error-neg" style="display: none; padding: 16px; background: #fee2e2; color: #dc2626; border-radius: 8px; border-left: 4px solid #dc2626; margin-bottom: 20px;">
+      ❌ <span id="error-message-text-neg">Ошибка при расчёте.</span>
+    </div>
+    <div id="coordinates-container-neg" style="display: none; overflow-x: auto;">
+      <div style="margin-bottom: 16px; padding: 12px; background: #dcfce7; border-radius: 8px; font-weight: 500;">
+        Шаг: <span id="step-value-neg"></span> мм | Расстояние: <span id="distance-value-neg"></span> дискрет
+      </div>
+      <table id="coordinates-table-neg" style="width: 100%; border-collapse: collapse; margin-top: 16px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <thead>
+          <tr style="background: #16a34a; color: white;">
+            <th style="padding: 12px; text-align: center;">№</th>
+            <th style="padding: 12px; text-align: center;">Станочная координата (мм)</th>
+            <th style="padding: 12px; text-align: center;">Отклонение (мкм)</th>
+            <th style="padding: 12px; text-align: center;">Компенсация (дискр)</th>
+          </tr>
+        </thead>
+        <tbody id="coordinates-body-neg"></tbody>
+      </table>
+      <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <button onclick="generateValuesStringNeg()" style="padding: 12px 24px; background: #ea580c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
+          📤 Сформировать строку компенсаций
+        </button>
+        <div id="values-string-output-neg" style="flex: 1; min-width: 300px; padding: 12px; background: #fffbeb; border: 1px dashed #ca8a04; border-radius: 6px; font-family: monospace; font-size: 14px; word-break: break-all; display: none;"></div>
+        <button id="copy-values-btn-neg" onclick="copyValuesStringNeg()" style="padding: 12px 16px; background: #ca8a04; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; display: none;">📋</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function calculateNegativeAxis() {
+    const q = document.getElementById('input-q-neg').value.trim();
+    const w = document.getElementById('input-w-neg').value.trim();
+    const e = document.getElementById('input-e-neg').value.trim();
+    const r = parseFloat(document.getElementById('input-r-neg').value);
+    const o = parseFloat(document.getElementById('input-o-neg').value);
+    const p = parseFloat(document.getElementById('input-p-neg').value);
+    const y = parseFloat(document.getElementById('input-y-neg').value);
+
+    const errorDiv = document.getElementById('coordinates-error-neg');
+    const errorText = document.getElementById('error-message-text-neg');
+
+    if (!q || !w || !e || isNaN(r) || isNaN(o) || isNaN(p) || isNaN(y)) {
+      alert('Заполните все поля числами.');
+      return;
+    }
+
+    if (r <= 0 || y <= 0) {
+      errorText.textContent = 'R и Y должны быть > 0.';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    if (o > p) {
+      errorText.textContent = 'Начало измерения (O) должно быть <= конца (P).';
+      errorDiv.style.display = 'block';
+      return;
+    }
+
+    errorDiv.style.display = 'none';
+
+    // Найти maxAbs и extendedMax
+    const maxAbs = Math.max(Math.abs(o), Math.abs(p));
+    // Правило из примера: extendedMax = ceil(maxAbs / Y + 2) * Y
+    const extendedMax = Math.ceil(maxAbs / y + 2) * y;
+    const numIntervals = (2 * extendedMax) / y; // T
+    const numPoints = numIntervals + 1; // Количество точек для построения таблицы
+
+    const i = Math.round(numIntervals * y * r);
+
+    document.getElementById('step-value-neg').textContent = y;
+    document.getElementById('distance-value-neg').textContent = i.toLocaleString();
+
+    window.globalR_neg = r;
+    window.globalO_neg = o;
+    window.globalP_neg = p;
+    window.globalY_neg = y;
+    window.globalExtendedMax_neg = extendedMax;
+    window.globalNumIntervals_neg = numIntervals;
+    window.globalNumPoints_neg = numPoints;
+
+    buildTableNegativeAxis();
+
+    const command = `#${q} DEFINE COMP ${numIntervals},#${w}D,#${e}, ${i}`;
+    document.getElementById('final-command-neg').textContent = command;
+    document.getElementById('command-result-neg').style.display = 'block';
+    document.getElementById('copy-command-btn-neg').style.display = 'inline-block';
+
+    document.getElementById('coordinates-container-neg').style.display = 'block';
+    document.getElementById('values-string-output-neg').style.display = 'none';
+    document.getElementById('copy-values-btn-neg').style.display = 'none';
+  }
+
+  function buildTableNegativeAxis() {
+    const tbody = document.getElementById('coordinates-body-neg');
+    tbody.innerHTML = '';
+
+    const y = window.globalY_neg;
+    const o = window.globalO_neg;
+    const p = window.globalP_neg;
+    const extendedMax = window.globalExtendedMax_neg;
+    const r = window.globalR_neg;
+    const numPoints = window.globalNumPoints_neg;
+
+    // Создаем массив координат: 0, Y, 2Y, ..., extendedMax, -extendedMax, ..., -Y
+    const coords = [0];
+    for (let val = y; val <= extendedMax; val += y) {
+        coords.push(val);
+    }
+    for (let val = -extendedMax; val < 0; val += y) {
+        coords.push(val);
+    }
+
+    for (let i = 0; i < coords.length; i++) {
+      const coord = coords[i];
+      const calcCellId = `calc-neg-${i}`;
+      const inputCellId = `input-neg-${i}`;
+
+      let isEditable = false;
+      let isDisabled = true;
+      let inputValue = "";
+      let inputStyle = "background: #f1f1f1; color: #666;";
+
+      if (coord === 0) {
+        // Точка 0 — недоступна, значение 0
+        inputValue = "0";
+      } else if (coord >= o && coord <= p) {
+        // Диапазон измерения — доступен для редактирования
+        isEditable = true;
+        isDisabled = false;
+        inputStyle = "";
+      } else {
+        // Вне диапазона — недоступно, значение 0
+        inputValue = "0";
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${i + 1}</td>
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${coord}</td>
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">
+          <input type="number" step="any" id="${inputCellId}" value="${inputValue}" ${isDisabled ? 'disabled' : ''}
+                 oninput="updateCalculationNeg(${i})"
+                 style="width: 100%; padding: 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 14px; ${inputStyle}">
+        </td>
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;" id="${calcCellId}">
+          ${isDisabled ? (inputValue === "" ? "—" : Math.round(16 * parseFloat(inputValue || 0) * (r / 1000))) : "—"}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function updateCalculationNeg(index) {
+    const input = document.getElementById(`input-neg-${index}`);
+    const calcCell = document.getElementById(`calc-neg-${index}`);
+    if (!input || !calcCell || input.disabled) return;
+
+    const userValue = parseFloat(input.value);
+    const r = window.globalR_neg || 0;
+
+    if (isNaN(userValue) || r <= 0) {
+      calcCell.textContent = "—";
+      return;
+    }
+
+    const calculated = Math.round(16 * userValue * (r / 1000));
+    calcCell.textContent = calculated;
+  }
+
+  function generateValuesStringNeg() {
+    const y = window.globalY_neg;
+    const o = window.globalO_neg;
+    const p = window.globalP_neg;
+    const extendedMax = window.globalExtendedMax_neg;
+    const numIntervals = window.globalNumIntervals_neg;
+    const r = window.globalR_neg;
+
+    if (!numIntervals) return;
+
+    // Создаем массив координат: 0, Y, 2Y, ..., extendedMax, -extendedMax, ..., -Y
+    const coords = [0];
+    for (let val = y; val <= extendedMax; val += y) {
+        coords.push(val);
+    }
+    for (let val = -extendedMax; val < 0; val += y) {
+        coords.push(val);
+    }
+
+    const values = [];
+    // Формируем строку компенсаций по порядку координат, исключая точку 0
+    // Строка: [comp(Y), comp(2Y), ..., comp(extendedMax), comp(-extendedMax), ..., comp(-Y)]
+    // Это T значений.
+
+    for (let val = y; val <= extendedMax; val += y) {
+        // Найти индекс для val
+        const index = coords.indexOf(val);
+        if (index !== -1) {
+            const calcCell = document.getElementById(`calc-neg-${index}`);
+            const value = calcCell && calcCell.textContent !== "—" ? calcCell.textContent : "0";
+            values.push(value);
+        }
+    }
+    for (let val = -extendedMax; val < 0; val += y) {
+        const index = coords.indexOf(val);
+        if (index !== -1) {
+            const calcCell = document.getElementById(`calc-neg-${index}`);
+            const value = calcCell && calcCell.textContent !== "—" ? calcCell.textContent : "0";
+            values.push(value);
+        }
+    }
+
+
+    // Длина строки компенсаций должна быть равна количеству интервалов (T)
+    if (values.length !== numIntervals) {
+        console.error(`Ошибка: количество значений в строке (${values.length}) не равно количеству интервалов (${numIntervals})`);
+        return;
+    }
+
+    const resultString = values.join(" ");
+    const outputDiv = document.getElementById('values-string-output-neg');
+    outputDiv.textContent = resultString;
+    outputDiv.style.display = 'block';
+    document.getElementById('copy-values-btn-neg').style.display = 'inline-block';
+  }
+
+  function copyCommandNeg() {
+    const command = document.getElementById('final-command-neg').textContent;
+    navigator.clipboard.writeText(command).then(() => {
+      alert('✅ Команда скопирована!');
+    }).catch(() => {
+      alert('Ошибка. Скопируйте вручную.');
+    });
+  }
+
+  function copyValuesStringNeg() {
+    const text = document.getElementById('values-string-output-neg').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✅ Строка компенсаций скопирована!');
+    });
+  }
+</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<!-- ВКЛАДКА 5 Карта памяти для графиков -->
     <div id="tab5" class="tab-content">
       <h2>Карта памяти для графиков</h2>
@@ -1044,36 +1449,118 @@
 
     </div>
 
-    <!-- ВКЛАДКА 6 Коэффициент для положения и для тока -->
-    <div id="tab6" class="tab-content">
-      <h2>Коэффициент для положения</h2>
 
-      <div class="interactive-block">
-        <h3>🧮 Расчёт коэффициента положения</h3>
-        <p>Формула: <strong>Коэффициент = 1 / 32 / Ix08 × (1000 / #x->)</strong></p>
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;">
-          <div style="flex: 1; min-width: 200px;">
-            <label for="input-x">Введите Ix08:</label>
-            <input type="number" id="input-x" placeholder="Например: 5" step="any">
-          </div>
-          <div style="flex: 1; min-width: 200px;">
-            <label for="input-y">Введите #x-> (если 0, ставить 1000):</label>
-            <input type="number" id="input-y" placeholder="Например: 1000" step="any">
-          </div>
-        </div>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
-          <button onclick="calculateCoefficient()" style="background: #7B61FF; color: white; border: none;">🧮 Рассчитать</button>
-          <button onclick="resetCoefficient()" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;">🔄 Сбросить</button>
-        </div>
-        <div id="result-coeff" style="padding: 16px; background: #E0E7FF; border-radius: 8px; border-left: 4px solid #7B61FF; display: none; font-weight: 600;">
-          <span>Результат: </span><span id="coeff-value"></span>
-        </div>
+<!-- ВКЛАДКА 6 Коэффициент для положения и для тока -->
+<div id="tab6" class="tab-content">
+  <h2>🧮 Коэффициенты для графиков</h2>
+
+  <!-- 🧮 Блок 1: Расчёт коэффициента положения -->
+  <div class="interactive-block" style="background: #f0f9ff; padding: 24px; border-radius: 12px; border: 2px solid #7B61FF; margin: 30px 0; box-shadow: 0 4px 12px rgba(123, 97, 255, 0.1);">
+    <h3 style="color: #7B61FF; margin-bottom: 20px;">🔧 Расчёт коэффициента положения</h3>
+    <p>Формула: <strong>Коэффициент = 1 / 32 / Ix08 × (1000 / #x->)</strong></p>
+
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 20px 0; align-items: end;">
+      <div style="flex: 1; min-width: 200px;">
+        <label for="input-x-tab6">Введите Ix08:</label>
+        <input type="number" id="input-x-tab6" placeholder="Например: 5" step="any" style="width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 16px; margin-top: 4px;">
       </div>
-
-      <h2>Коэффициент для тока, использовать k(plot)</h2>
-      <img src="content/koef_privod.jpg" alt="Коэффициент для тока">
-
+      <div style="flex: 1; min-width: 200px;">
+        <label for="input-y-tab6">Введите #x-> (если 0, ставить 1000):</label>
+        <input type="number" id="input-y-tab6" placeholder="Например: 1000" step="any" style="width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 16px; margin-top: 4px;">
+      </div>
     </div>
+
+    <div style="display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap;">
+      <button onclick="calculateCoefficientTab6()" style="padding: 14px 28px; background: #7B61FF; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+        🧮 Рассчитать
+      </button>
+      <button onclick="resetCoefficientTab6()" style="padding: 14px 28px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 16px; transition: background 0.3s;">
+        🔄 Сбросить
+      </button>
+    </div>
+
+    <div id="result-coeff-tab6" style="padding: 16px; background: #E0E7FF; border-radius: 8px; border-left: 4px solid #7B61FF; display: none; font-size: 18px; font-weight: 600; color: #1E293B; word-break: break-all;">
+      <span>Результат: </span><span id="coeff-value-tab6"></span>
+    </div>
+  </div>
+
+  <!-- 📊 Блок 2: Коэффициент для тока -->
+  <div class="interactive-block" style="background: #fffbeb; padding: 24px; border-radius: 12px; border: 2px solid #ca8a04; margin: 30px 0; box-shadow: 0 4px 12px rgba(202, 138, 4, 0.1);">
+    <h3 style="color: #ca8a04; margin-bottom: 20px;">📊 Коэффициент для тока</h3>
+    <p>Используйте значение <strong>k(plot)</strong> из графика:</p>
+    <img src="content/koef_privod.jpg" alt="Коэффициент для тока" style="max-width: 100%; height: auto; border-radius: 8px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  </div>
+</div>
+
+<script>
+  // 🎯 Расчёт коэффициента положения (для tab6)
+  function calculateCoefficientTab6() {
+    // Используем уникальные ID, чтобы избежать конфликтов
+    const xInput = document.getElementById('input-x-tab6');
+    const yInput = document.getElementById('input-y-tab6');
+    const resultBox = document.getElementById('result-coeff-tab6');
+    const resultValue = document.getElementById('coeff-value-tab6');
+
+    // Проверка на существование элементов
+    if (!xInput || !yInput || !resultBox || !resultValue) {
+      console.error('❌ Ошибка: не найдены элементы для расчета коэффициента в tab6');
+      alert('Ошибка интерфейса. Попробуйте перезагрузить страницу.');
+      return;
+    }
+
+    const x = parseFloat(xInput.value);
+    const y = parseFloat(yInput.value);
+
+    // Проверка на корректность ввода
+    if (isNaN(x) || isNaN(y)) {
+      alert('Пожалуйста, введите числовые значения для Ix08 и #x->.');
+      return;
+    }
+
+    if (x === 0) {
+      alert('Ix08 не может быть равен нулю.');
+      return;
+    }
+
+    if (y === 0) {
+      alert('Значение #x-> не может быть нулевым. Если оно 0, введите 1000.');
+      return;
+    }
+
+    // Расчёт по формуле: 1 / 32 / X * (1000 / Y)
+    const coefficient = (1 / 32 / x) * (1000 / y);
+
+    resultValue.textContent = coefficient.toFixed(8); // 8 знаков после запятой
+    resultBox.style.display = 'block';
+  }
+
+  // 🔄 Сброс формы (для tab6)
+  function resetCoefficientTab6() {
+    const xInput = document.getElementById('input-x-tab6');
+    const yInput = document.getElementById('input-y-tab6');
+    const resultBox = document.getElementById('result-coeff-tab6');
+
+    if (xInput) xInput.value = '';
+    if (yInput) yInput.value = '';
+    if (resultBox) resultBox.style.display = 'none';
+  }
+
+  // 💄 Стилизация инпутов при загрузке страницы
+  document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('#tab6 input');
+    inputs.forEach(input => {
+      input.style.width = '100%';
+      input.style.padding = '12px';
+      input.style.border = '1px solid #CBD5E1';
+      input.style.borderRadius = '8px';
+      input.style.background = 'white';
+      input.style.fontSize = '16px';
+      input.style.marginTop = '4px';
+    });
+  });
+</script>
+
+
 
     <!-- ВКЛАДКА 7 Система данных кассет энкодеров -->
     <div id="tab7" class="tab-content">
