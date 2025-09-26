@@ -722,35 +722,7 @@
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<!-- ВКЛАДКА 2: Расчет таблицы компенсации для круговой оси A -->
+	<!-- ВКЛАДКА 3: Расчет таблицы компенсации для круговой оси A -->
 <div id="tab3" class="tab-content">
   <h2>🌀 Расчёт таблицы компенсации для круговой оси A</h2>
   <p>Заполните параметры согласно руководству. Предел измерения = 360°.</p>
@@ -823,43 +795,37 @@
     const r = parseFloat(document.getElementById('input-r-a').value);
     const startAngle = parseFloat(document.getElementById('input-start-a').value);
     const endAngle = parseFloat(document.getElementById('input-end-a').value);
-    const step = parseFloat(document.getElementById('input-step-a').value);
+    const y = parseFloat(document.getElementById('input-step-a').value);
 
     const errorDiv = document.getElementById('coordinates-error-a');
     const errorText = document.getElementById('error-message-text-a');
 
-    if (!q || !w || !e || isNaN(r) || isNaN(startAngle) || isNaN(endAngle) || isNaN(step)) {
+    if (!q || !w || !e || isNaN(r) || isNaN(startAngle) || isNaN(endAngle) || isNaN(y)) {
       alert('Заполните все поля числами.');
       return;
     }
 
-    if (r <= 0 || step <= 0) {
-      errorText.textContent = 'R и шаг должны быть > 0.';
+    if (r <= 0 || y <= 0) {
+      errorText.textContent = 'R и Y должны быть > 0.';
       errorDiv.style.display = 'block';
       return;
     }
 
-    if (360 % step !== 0) {
-      errorText.textContent = 'Шаг должен быть делителем 360 (например: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360).';
+    if (y % 1 !== 0 || 360 % y !== 0) {
+      errorText.textContent = 'Шаг должен быть целым числом и делителем 360.';
       errorDiv.style.display = 'block';
       return;
     }
 
     if (startAngle > endAngle) {
-      errorText.textContent = 'Начальный угол должен быть ≤ конечного.';
-      errorDiv.style.display = 'block';
-      return;
-    }
-
-    if (startAngle < -360 || endAngle > 360) {
-      errorText.textContent = 'Углы должны быть в диапазоне [-360°, 360°].';
+      errorText.textContent = 'Начало измерения должно быть ≤ конца.';
       errorDiv.style.display = 'block';
       return;
     }
 
     errorDiv.style.display = 'none';
 
-    const t = 360 / step; // количество точек в команде
+    const t = 360 / y; // количество точек в команде
     const i = Math.round(360 * r); // I = 360 * R
 
     document.getElementById('t-value-a').textContent = t;
@@ -868,7 +834,7 @@
     window.globalR_A = r;
     window.globalStartAngle = startAngle;
     window.globalEndAngle = endAngle;
-    window.globalStep_A = step;
+    window.globalStep_A = y;
 
     buildTableAxisA();
 
@@ -893,57 +859,54 @@
 
     const totalPoints = 360 / step; // точки: 0, step, 2*step, ..., 360-step
 
-    // Массив для хранения значений компенсации
-    const compensationValues = new Array(totalPoints).fill(0);
-    const isEditable = new Array(totalPoints).fill(false);
-
-    // Заполняем измеряемые точки
     for (let i = 0; i < totalPoints; i++) {
-      const angle = i * step; // 0, 30, 60, ..., 330
+      const angle = i * step;
+      const calcCellId = `calc-a-${i}`;
+      const inputCellId = `input-a-${i}`;
 
-      // Нормализуем угол в диапазон [-360, 360]
+      let isEditable = false;
+      let isDisabled = true;
+      let inputValue = "";
+      let inputStyle = "background: #f1f1f1; color: #666;";
+
+      // Определяем, попадает ли угол в диапазон измерения
       let normalizedAngle = angle;
       if (startAngle < 0 && angle > 180) {
         normalizedAngle = angle - 360;
       }
 
       if (normalizedAngle >= startAngle && normalizedAngle <= endAngle) {
-        isEditable[i] = true;
+        isEditable = true;
+        isDisabled = false;
+        inputStyle = "";
+      } else if (angle === (360 + startAngle) && startAngle < 0) {
+        // Точка (360 + старт) должна быть 0
+        inputValue = "0";
+      } else if (angle < startAngle) {
+        // До начала — 0
+        inputValue = "0";
+      } else {
+        // После конца — значение последней точки (endAngle)
+        inputValue = "0"; // Заглушка, реальное значение установится при генерации строки
       }
-    }
 
-    // Обрабатываем особый случай: если startAngle < 0,
-    // то точка (360 + startAngle) должна быть = 0
-    if (startAngle < 0) {
-      const specialAngle = 360 + startAngle; // например, -90 → 270
-      const specialIndex = Math.round(specialAngle / step);
-      if (specialIndex >= 0 && specialIndex < totalPoints) {
-        isEditable[specialIndex] = false;
-        compensationValues[specialIndex] = 0;
+      // Форматирование угла для отображения
+      let displayAngle = angle;
+      if (startAngle < 0 && angle > 180) {
+        displayAngle = `${angle} (${angle - 360})`;
       }
-    }
-
-    // Рендерим таблицу
-    for (let i = 0; i < totalPoints; i++) {
-      const angle = i * step;
-      const calcCellId = `calc-a-${i}`;
-      const inputCellId = `input-a-${i}`;
-
-      const disabled = !isEditable[i];
-      const inputValue = disabled ? "0" : "";
-      const inputStyle = disabled ? "background: #f1f1f1; color: #666;" : "";
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${i + 1}</td>
-        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${angle}</td>
+        <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">${displayAngle}</td>
         <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;">
-          <input type="number" step="any" id="${inputCellId}" value="${inputValue}" ${disabled ? 'disabled' : ''}
+          <input type="number" step="any" id="${inputCellId}" value="${inputValue}" ${isDisabled ? 'disabled' : ''}
                  oninput="updateCalculationA(${i})"
                  style="width: 100%; padding: 8px; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 14px; ${inputStyle}">
         </td>
         <td style="padding: 12px; text-align: center; border-bottom: 1px solid #eee;" id="${calcCellId}">
-          ${disabled ? "0" : "—"}
+          ${isDisabled ? (inputValue === "" ? "—" : Math.round(16 * parseFloat(inputValue || 0) * (r / 1000))) : "—"}
         </td>
       `;
       tbody.appendChild(tr);
@@ -968,12 +931,12 @@
   }
 
   function generateValuesStringA() {
-    const totalPoints = 360 / window.globalStep_A;
-    if (isNaN(totalPoints)) return;
+    const t = parseInt(360 / window.globalStep_A);
+    if (isNaN(t)) return;
 
     const values = [];
     // Пропускаем первую строку (0°)
-    for (let i = 1; i < totalPoints; i++) {
+    for (let i = 1; i < t; i++) {
       const calcCell = document.getElementById(`calc-a-${i}`);
       const value = calcCell && calcCell.textContent !== "—" ? calcCell.textContent : "0";
       values.push(value);
@@ -1005,6 +968,34 @@
     });
   }
 </script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	
 	
 
